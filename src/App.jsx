@@ -381,7 +381,7 @@ function ProjectCollection({ projectImages, intro = false }) {
             state={project.href ? undefined : { from: location.pathname === "/" ? "/#work" : "/work", backgroundLocation: location }}
             tabIndex={copy ? -1 : undefined} aria-label={"查看 " + project.name + " 作品"}>
             <div className="gallery-project-image">
-              <img src={project.cover || projectImages[project.slug] || `/work-placeholders/${project.slug}.jpg`} style={{ objectPosition: project.coverPosition }} loading="lazy" decoding="async" alt={project.name + " project cover"} />
+              <img src={project.cover || projectImages[project.slug] || `/work-placeholders/${project.slug}.jpg`} style={{ objectPosition: project.coverPosition }} loading={copy ? "lazy" : "eager"} fetchPriority={intro ? "low" : "auto"} decoding="async" alt={project.name + " project cover"} />
               <span className="gallery-open" aria-hidden="true">↗</span>
             </div>
             <div className="gallery-project-caption"><strong><BlurText>{project.name}</BlurText></strong><span><BlurText by="words" delay={90}>{project.service}</BlurText></span></div>
@@ -392,32 +392,67 @@ function ProjectCollection({ projectImages, intro = false }) {
   );
 }
 
+function useLoopVideo(ref, reveal, respectReducedMotion = false) {
+  useEffect(() => {
+    const video = ref.current;
+    const hero = video.closest('.reference-hero');
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let visible = !reveal;
+    video.muted = video.defaultMuted = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('webkit-playsinline', '');
+    const resume = () => {
+      if (!visible || document.hidden || hero?.style.opacity === '0' || (respectReducedMotion && motion.matches)) video.pause();
+      else if (video.paused) video.play().catch(() => {});
+    };
+    const bridgeResume = () => {
+      if (visible && !document.hidden) window.WeixinJSBridge?.invoke('getNetworkType', {}, resume);
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible) {
+        reveal?.(true);
+        if (video.preload === 'none' && !(respectReducedMotion && motion.matches)) {
+          video.preload = 'auto';
+          video.load();
+        }
+      }
+      resume();
+      bridgeResume();
+    }, { rootMargin: reveal ? '240px' : '0px' });
+    observer.observe(video);
+    resume();
+    bridgeResume();
+    video.addEventListener('canplay', resume);
+    document.addEventListener('WeixinJSBridgeReady', bridgeResume);
+    document.addEventListener('visibilitychange', resume);
+    document.addEventListener('touchstart', resume, { passive: true });
+    document.addEventListener('pointerdown', resume);
+    const visibilityObserver = new MutationObserver(resume);
+    if (hero) visibilityObserver.observe(hero, { attributes: true, attributeFilter: ['style'] });
+    window.addEventListener('pageshow', resume);
+    motion.addEventListener('change', resume);
+    return () => {
+      observer.disconnect();
+      video.removeEventListener('canplay', resume);
+      document.removeEventListener('WeixinJSBridgeReady', bridgeResume);
+      document.removeEventListener('visibilitychange', resume);
+      document.removeEventListener('touchstart', resume);
+      document.removeEventListener('pointerdown', resume);
+      visible = false;
+      visibilityObserver.disconnect();
+      window.removeEventListener('pageshow', resume);
+      motion.removeEventListener('change', resume);
+    };
+  }, [ref, reveal, respectReducedMotion]);
+}
+
 function HeroPortal() {
   const heroRef = useRef(null);
   const effectsRef = useRef(null);
   const videoRef = useRef(null);
-  const [playbackBlocked, setPlaybackBlocked] = useState(false);
 
-  useEffect(() => {
-    const video = videoRef.current;
-    let visible = true;
-    const resume = () => {
-      if (document.hidden || !visible) video.pause();
-      else if (video.paused) video.play().catch(error => {
-        if (error.name === 'NotAllowedError') setPlaybackBlocked(true);
-      });
-    };
-    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; resume(); });
-    observer.observe(video);
-    resume();
-    video.addEventListener('canplay', resume);
-    document.addEventListener('visibilitychange', resume);
-    return () => {
-      observer.disconnect();
-      video.removeEventListener('canplay', resume);
-      document.removeEventListener('visibilitychange', resume);
-    };
-  }, []);
+  useLoopVideo(videoRef);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -426,9 +461,12 @@ function HeroPortal() {
 
     const context = canvas.getContext("2d");
     const butterfly = new Image();
-    butterfly.src = "/assets/butterfly-3d.png";
-    const particleSource = new Image();
-    particleSource.src = "/assets/source.png";
+    butterfly.src = "/assets/butterfly-3d.webp";
+    const particleArt = ['/assets/particle-spark.png', '/assets/particle-star.png'].map(src => {
+      const image = new Image();
+      image.src = src;
+      return image;
+    });
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
     const pointer = { x: 0, y: 0 };
@@ -443,33 +481,8 @@ function HeroPortal() {
     let arcLength = 0;
     let flightAngle = 0;
     let particles = [];
-    let particleArt = [];
-
-    particleSource.addEventListener("load", () => {
-      particleArt = [[427, 411, 17, 18], [386, 408, 26, 27]].map(([x, y, w, h]) => {
-        const art = document.createElement("canvas");
-        art.width = w;
-        art.height = h;
-        const artContext = art.getContext("2d");
-        artContext.drawImage(particleSource, x, y, w, h, 0, 0, w, h);
-        const pixels = artContext.getImageData(0, 0, w, h);
-        const corners = [0, (w - 1) * 4, (h - 1) * w * 4, (w * h - 1) * 4];
-        const background = [0, 1, 2].map((channel) => corners.reduce((sum, index) => sum + pixels.data[index + channel], 0) / 4);
-        for (let py = 0; py < h; py += 1) {
-          for (let px = 0; px < w; px += 1) {
-            const index = (py * w + px) * 4;
-            const light = Math.max(
-              (pixels.data[index + 1] - background[1] - 5) * 7,
-              (pixels.data[index] - background[0] - 5) * 8,
-            );
-            const edge = Math.min(1, Math.min(px, py, w - 1 - px, h - 1 - py) / 3);
-            pixels.data[index + 3] = Math.max(0, Math.min(255, light)) * edge;
-          }
-        }
-        artContext.putImageData(pixels, 0, 0);
-        return art;
-      });
-    }, { once: true });
+    let canvasSize = 0;
+    let visible = true;
 
     const resize = () => {
       const bounds = hero.getBoundingClientRect();
@@ -477,10 +490,9 @@ function HeroPortal() {
       width = bounds.width;
       height = bounds.height;
       unit = width / 1672;
-      canvas.width = Math.round(width * ratio);
-      canvas.height = Math.round(height * ratio);
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
+      canvasSize = Math.ceil(2 * (220 * unit + 108));
+      canvas.width = canvas.height = Math.round(canvasSize * ratio);
+      canvas.style.width = canvas.style.height = `${canvasSize}px`;
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
       if (!position.x) {
         position.x = pointer.x = width * (585 / 1672);
@@ -502,6 +514,8 @@ function HeroPortal() {
     };
 
     const paint = (time) => {
+      frame = 0;
+      if (!visible || document.hidden || hero.style.opacity === '0') return;
       const delta = Math.min(.032, (time - lastTime) / 1000);
       lastTime = time;
       const elapsed = (time - startTime) / 1000;
@@ -541,9 +555,12 @@ function HeroPortal() {
         }
       }
       particles = particles.filter((particle) => time - particle.born < 1000 && arcLength - particle.arc < 194 * unit);
-      context.clearRect(0, 0, width, height);
+      context.clearRect(0, 0, canvasSize, canvasSize);
+      canvas.style.transform = `translate3d(${position.x - canvasSize / 2}px, ${position.y - canvasSize / 2}px, 0)`;
+      context.save();
+      context.translate(canvasSize / 2 - position.x, canvasSize / 2 - position.y);
 
-      if (!moving && particleArt.length) {
+      if (!moving && particleArt.every(image => image.complete && image.naturalWidth)) {
         const idleLights = [[-47, 40], [-64, 16], [-83, 34], [-100, 43], [-112, 54], [-125, 66], [-136, 78], [-149, 90], [-166, 95], [-184, 102], [-207, 104]];
         context.save();
         context.translate(position.x, position.y);
@@ -556,7 +573,7 @@ function HeroPortal() {
         });
         context.restore();
       }
-      if (particleArt.length) particles.forEach((particle) => {
+      if (particleArt.every(image => image.complete && image.naturalWidth)) particles.forEach((particle) => {
         const life = (time - particle.born) / 1000;
         const size = (particle.kind ? 27 : 14) * unit;
         context.save();
@@ -567,7 +584,7 @@ function HeroPortal() {
         context.restore();
       });
 
-      if (butterfly.complete) {
+      if (butterfly.complete && butterfly.naturalWidth) {
         const size = Math.max(64, Math.min(108, width * .072));
         context.save();
         context.translate(position.x, position.y);
@@ -576,18 +593,33 @@ function HeroPortal() {
         context.drawImage(butterfly, -size / 2, -size / 2, size, size);
         context.restore();
       }
+      context.restore();
       lastFlight.x = position.x;
       lastFlight.y = position.y;
       frame = requestAnimationFrame(paint);
     };
 
+    const resumePaint = () => {
+      if (!frame && visible && !document.hidden && hero.style.opacity !== '0') {
+        lastTime = performance.now();
+        frame = requestAnimationFrame(paint);
+      }
+    };
+    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; resumePaint(); });
+    observer.observe(hero);
     resize();
+    document.addEventListener('visibilitychange', resumePaint);
+    const visibilityObserver = new MutationObserver(resumePaint);
+    visibilityObserver.observe(hero, { attributes: true, attributeFilter: ['style'] });
     hero.addEventListener("pointermove", move, { passive: true });
     hero.addEventListener("pointerleave", resetPointer);
     window.addEventListener("resize", resize);
     frame = requestAnimationFrame(paint);
     return () => {
       cancelAnimationFrame(frame);
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', resumePaint);
+      visibilityObserver.disconnect();
       hero.removeEventListener("pointermove", move);
       hero.removeEventListener("pointerleave", resetPointer);
       window.removeEventListener("resize", resize);
@@ -597,8 +629,7 @@ function HeroPortal() {
   return (
     <section ref={heroRef} className="reference-hero hero-video-cover" aria-label="视频作品集封面，蝴蝶跟随鼠标">
       <h1 className="visually-hidden">杨初雨的 AI 视觉设计作品集</h1>
-      <video ref={videoRef} className="hero-video-static" src="/hero-loop-final.mp4" poster="/hero-poster.jpg" autoPlay muted loop playsInline preload="auto" onPlaying={() => setPlaybackBlocked(false)} />
-      {playbackBlocked && <button className="hero-play-button" type="button" onClick={() => videoRef.current.play().catch(() => {})}>播放首页动画 <span aria-hidden="true">▷</span></button>}
+      <video ref={videoRef} className="hero-video-static" src="/hero-loop-final.mp4" poster="/hero-poster.jpg" autoPlay muted loop playsInline preload="auto" />
       <p className="hero-identity">AI视觉设计</p>
       <canvas ref={effectsRef} className="hero-effects-canvas" aria-hidden="true" />
     </section>
@@ -630,8 +661,9 @@ function ProfilePage() {
     return () => { mounted = false; window.clearTimeout(photoClickTimer.current); };
   }, []);
 
-  useEffect(() => () => {
-    if (photoSrc.startsWith("blob:")) URL.revokeObjectURL(photoSrc);
+  useEffect(() => {
+    profilePhotoRef.current?.querySelector('.profile-photo-card-front img').decode().catch(() => {});
+    return () => { if (photoSrc.startsWith("blob:")) URL.revokeObjectURL(photoSrc); };
   }, [photoSrc]);
 
   const replaceProfilePhoto = async (event) => {
@@ -758,7 +790,7 @@ function ProfilePage() {
                 >
                   <span className="profile-photo-card-inner" ref={profilePhotoInnerRef}>
                     <span className="profile-photo-card-face profile-photo-card-back" aria-hidden="true">
-                      <img src="/profile-card-back.png" alt="" />
+                      <img src="/profile-card-back.webp" alt="" />
                     </span>
                     <span className="profile-photo-card-face profile-photo-card-front">
                       <img src={photoSrc} alt="个人照片" />
@@ -773,7 +805,7 @@ function ProfilePage() {
                   disabled={photoOpen || photoBusy}
                   onClick={() => playProfilePhoto(true)}
                 >
-                  <img className="profile-folder-art" src="/profile-folder.png" alt="点击图片" />
+                  <img className="profile-folder-art" src="/profile-folder.webp" alt="点击图片" />
                 </button>
               </span>
             </span>
@@ -1023,30 +1055,7 @@ function EndingAnimation() {
   const videoRef = useRef(null);
   const [hasEntered, setHasEntered] = useState(false);
 
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let visible = false;
-    const syncPlayback = () => {
-      if (!videoRef.current) return;
-      if (visible && videoRef.current.readyState >= 2) setHasEntered(true);
-      if (visible && !document.hidden && !media.matches) {
-        videoRef.current.play().catch(() => {});
-      } else videoRef.current.pause();
-    };
-    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting && entry.intersectionRatio >= 0.18; syncPlayback(); }, { threshold: [0, 0.18] });
-    observer.observe(videoRef.current);
-    syncPlayback();
-    const video = videoRef.current;
-    video.addEventListener('loadeddata', syncPlayback);
-    media.addEventListener("change", syncPlayback);
-    document.addEventListener('visibilitychange', syncPlayback);
-    return () => {
-      observer.disconnect();
-      video.removeEventListener('loadeddata', syncPlayback);
-      media.removeEventListener("change", syncPlayback);
-      document.removeEventListener('visibilitychange', syncPlayback);
-    };
-  }, []);
+  useLoopVideo(videoRef, setHasEntered, true);
 
   return (
     <video
@@ -1055,6 +1064,8 @@ function EndingAnimation() {
       src="/ending-cat.mp4"
       poster="/ending-cat-poster.jpg"
       preload="none"
+      width="1280"
+      height="720"
       loop
       muted
       playsInline
