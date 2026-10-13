@@ -237,6 +237,7 @@ function LoopGallery({ label, children, hold = false }) {
   const [running, setRunning] = useState(false);
   const [paused, setPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const [touching, setTouching] = useState(false);
 
   useEffect(() => {
     const gallery = ref.current;
@@ -250,7 +251,8 @@ function LoopGallery({ label, children, hold = false }) {
     observer.observe(gallery);
     const resizeObserver = new ResizeObserver(() => {
       const group = gallery.querySelector('.gallery-group');
-      gallery.style.setProperty('--loop-duration', `${group.offsetWidth / 35}s`);
+      const speed = window.matchMedia('(pointer: coarse)').matches ? 24 : 35;
+      gallery.style.setProperty('--loop-duration', `${group.offsetWidth / speed}s`);
     });
     resizeObserver.observe(gallery.querySelector('.gallery-group'));
     document.addEventListener("visibilitychange", sync);
@@ -264,11 +266,14 @@ function LoopGallery({ label, children, hold = false }) {
   }, []);
 
   return (
-    <div ref={ref} className="loop-gallery" data-running={running && !paused && !hovered && !hold} role="region" tabIndex={0} aria-label={label + "，按空格暂停或继续轮转"}
+    <div ref={ref} className="loop-gallery" data-running={running && !paused && !hovered && !touching && !hold} role="region" tabIndex={0} aria-label={label + "，触碰暂停，按空格暂停或继续轮转"}
+      onPointerDown={event => { if (event.pointerType !== 'mouse') setTouching(true); }}
+      onPointerUp={() => setTouching(false)}
+      onPointerCancel={() => setTouching(false)}
       onPointerMove={event => {
         if (event.pointerType === 'mouse' && (event.movementX || event.movementY)) setHovered(Boolean(event.target.closest('.gallery-project')));
       }}
-      onPointerLeave={() => setHovered(false)}
+      onPointerLeave={() => { setHovered(false); setTouching(false); }}
       onKeyDown={event => { if (event.key === " " && event.target === event.currentTarget) { event.preventDefault(); setPaused(value => !value); } }}>
       <div className="gallery-viewport">
         <div className="gallery-track">
@@ -376,7 +381,7 @@ function ProjectCollection({ projectImages, intro = false }) {
             state={project.href ? undefined : { from: location.pathname === "/" ? "/#work" : "/work", backgroundLocation: location }}
             tabIndex={copy ? -1 : undefined} aria-label={"查看 " + project.name + " 作品"}>
             <div className="gallery-project-image">
-              <img src={project.cover || projectImages[project.slug] || `/work-placeholders/${project.slug}.jpg`} style={{ objectPosition: project.coverPosition }} alt={project.name + " project cover"} />
+              <img src={project.cover || projectImages[project.slug] || `/work-placeholders/${project.slug}.jpg`} style={{ objectPosition: project.coverPosition }} loading="lazy" decoding="async" alt={project.name + " project cover"} />
               <span className="gallery-open" aria-hidden="true">↗</span>
             </div>
             <div className="gallery-project-caption"><strong><BlurText>{project.name}</BlurText></strong><span><BlurText by="words" delay={90}>{project.service}</BlurText></span></div>
@@ -390,6 +395,29 @@ function ProjectCollection({ projectImages, intro = false }) {
 function HeroPortal() {
   const heroRef = useRef(null);
   const effectsRef = useRef(null);
+  const videoRef = useRef(null);
+  const [playbackBlocked, setPlaybackBlocked] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    let visible = true;
+    const resume = () => {
+      if (document.hidden || !visible) video.pause();
+      else if (video.paused) video.play().catch(error => {
+        if (error.name === 'NotAllowedError') setPlaybackBlocked(true);
+      });
+    };
+    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; resume(); });
+    observer.observe(video);
+    resume();
+    video.addEventListener('canplay', resume);
+    document.addEventListener('visibilitychange', resume);
+    return () => {
+      observer.disconnect();
+      video.removeEventListener('canplay', resume);
+      document.removeEventListener('visibilitychange', resume);
+    };
+  }, []);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -569,7 +597,8 @@ function HeroPortal() {
   return (
     <section ref={heroRef} className="reference-hero hero-video-cover" aria-label="视频作品集封面，蝴蝶跟随鼠标">
       <h1 className="visually-hidden">杨初雨的 AI 视觉设计作品集</h1>
-      <video className="hero-video-static" src="/hero-loop-final.mp4" poster="/hero-poster.jpg" autoPlay muted loop playsInline preload="auto" />
+      <video ref={videoRef} className="hero-video-static" src="/hero-loop-final.mp4" poster="/hero-poster.jpg" autoPlay muted loop playsInline preload="auto" onPlaying={() => setPlaybackBlocked(false)} />
+      {playbackBlocked && <button className="hero-play-button" type="button" onClick={() => videoRef.current.play().catch(() => {})}>播放首页动画 <span aria-hidden="true">▷</span></button>}
       <p className="hero-identity">AI视觉设计</p>
       <canvas ref={effectsRef} className="hero-effects-canvas" aria-hidden="true" />
     </section>
@@ -1024,7 +1053,8 @@ function EndingAnimation() {
       ref={videoRef}
       className={`contact-ending-animation${hasEntered ? ' has-entered' : ''}`}
       src="/ending-cat.mp4"
-      preload="auto"
+      poster="/ending-cat-poster.jpg"
+      preload="none"
       loop
       muted
       playsInline
@@ -1143,7 +1173,7 @@ function VideoShowcase() {
             onPointerEnter={event => { if (event.pointerType === 'mouse' && window.matchMedia('(hover: hover) and (pointer: fine)').matches) setPreviewVideo(index); }}
             onFocus={() => setPreviewVideo(index)} onBlur={() => setPreviewVideo(1)}
             onClick={() => openVideo(index)} aria-label={"放大播放视频 " + (index + 1)}>
-            <video ref={node => { inlineVideos.current[index] = node; }} src={video.src} poster={video.poster} muted loop playsInline preload="metadata" />
+            <video ref={node => { inlineVideos.current[index] = node; }} src={video.src} poster={video.poster} muted loop playsInline preload="none" />
             <span className="video-tile-title"><strong><BlurText by="words">{video.title}</BlurText></strong><span><BlurText delay={90}>{video.duration}</BlurText></span></span>
             <span className="video-tile-play" aria-hidden="true">↗</span>
           </button>
