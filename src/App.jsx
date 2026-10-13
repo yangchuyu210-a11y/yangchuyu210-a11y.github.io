@@ -110,18 +110,18 @@ const skills = [
 ];
 
 const brandMarks = {
-  flower: "/brand/flower.png",
-  folder: "/brand/folder.png",
-  heart: "/brand/heart.png",
-  stack: "/brand/stack.png",
-  video: "/brand/video.png",
-  plane: "/brand/paper-plane-v2.png",
+  flower: "/brand/flower.webp",
+  folder: "/brand/folder.webp",
+  heart: "/brand/heart.webp",
+  stack: "/brand/stack.webp",
+  video: "/brand/video.webp",
+  plane: "/brand/paper-plane-v2.webp",
 };
 
 function SectionMark({ type, className = "" }) {
   return (
     <span className={`section-mark section-mark-${type} ${className}`.trim()} aria-hidden="true">
-      <img src={brandMarks[type]} alt="" />
+      <img src={brandMarks[type]} alt="" loading="lazy" decoding="async" />
     </span>
   );
 }
@@ -220,7 +220,7 @@ function Header({ page }) {
     { label: "Contact", to: "/contact", active: page.pathname === "/contact" },
   ];
   return <header className={`site-header frame${page.pathname === "/" ? " site-header-home" : ""}${scrolled ? " is-scrolled" : ""}`}>
-    <Link className="brand link-line name-eyes-trigger" to="/yangchuyu" aria-label="YANGCHUYU · 查看简历"><BlurText>YANGCHUYU</BlurText><span className="name-eyes" aria-hidden="true"><img src="/brand/curious-eyes.png" alt="" width="44" height="32" /></span></Link>
+    <Link className="brand link-line name-eyes-trigger" to="/yangchuyu" aria-label="YANGCHUYU · 查看简历"><BlurText>YANGCHUYU</BlurText><span className="name-eyes" aria-hidden="true"><img src="/brand/curious-eyes.webp" alt="" width="44" height="32" decoding="async" /></span></Link>
     <nav aria-label="Primary navigation">
       {links.map((link, index) => <Link key={link.label} className={`nav-link${link.active ? " active" : ""}`} to={link.to} onClick={event => {
         if (page.pathname === link.to) {
@@ -392,17 +392,16 @@ function ProjectCollection({ projectImages, intro = false }) {
   );
 }
 
-function useLoopVideo(ref, reveal, respectReducedMotion = false) {
+function useLoopVideo(ref) {
   useEffect(() => {
     const video = ref.current;
     const hero = video.closest('.reference-hero');
-    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let visible = !reveal;
+    let visible = true;
     video.muted = video.defaultMuted = true;
     video.setAttribute('muted', '');
     video.setAttribute('webkit-playsinline', '');
     const resume = () => {
-      if (!visible || document.hidden || hero?.style.opacity === '0' || (respectReducedMotion && motion.matches)) video.pause();
+      if (!visible || document.hidden || hero?.style.opacity === '0') video.pause();
       else if (video.paused) video.play().catch(() => {});
     };
     const bridgeResume = () => {
@@ -410,16 +409,9 @@ function useLoopVideo(ref, reveal, respectReducedMotion = false) {
     };
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
-      if (visible) {
-        reveal?.(true);
-        if (video.preload === 'none' && !(respectReducedMotion && motion.matches)) {
-          video.preload = 'auto';
-          video.load();
-        }
-      }
       resume();
       bridgeResume();
-    }, { rootMargin: reveal ? '240px' : '0px' });
+    });
     observer.observe(video);
     resume();
     bridgeResume();
@@ -431,7 +423,6 @@ function useLoopVideo(ref, reveal, respectReducedMotion = false) {
     const visibilityObserver = new MutationObserver(resume);
     if (hero) visibilityObserver.observe(hero, { attributes: true, attributeFilter: ['style'] });
     window.addEventListener('pageshow', resume);
-    motion.addEventListener('change', resume);
     return () => {
       observer.disconnect();
       video.removeEventListener('canplay', resume);
@@ -442,9 +433,8 @@ function useLoopVideo(ref, reveal, respectReducedMotion = false) {
       visible = false;
       visibilityObserver.disconnect();
       window.removeEventListener('pageshow', resume);
-      motion.removeEventListener('change', resume);
     };
-  }, [ref, reveal, respectReducedMotion]);
+  }, [ref]);
 }
 
 function HeroPortal() {
@@ -629,7 +619,7 @@ function HeroPortal() {
   return (
     <section ref={heroRef} className="reference-hero hero-video-cover" aria-label="视频作品集封面，蝴蝶跟随鼠标">
       <h1 className="visually-hidden">杨初雨的 AI 视觉设计作品集</h1>
-      <video ref={videoRef} className="hero-video-static" src="/hero-loop-final.mp4" poster="/hero-poster.jpg" autoPlay muted loop playsInline preload="auto" />
+      <video ref={videoRef} className="hero-video-static" src="/hero-loop-web-20261013.mp4" poster="/hero-poster.jpg" autoPlay muted loop playsInline preload="auto" />
       <p className="hero-identity">AI视觉设计</p>
       <canvas ref={effectsRef} className="hero-effects-canvas" aria-hidden="true" />
     </section>
@@ -793,7 +783,7 @@ function ProfilePage() {
                       <img src="/profile-card-back.webp" alt="" />
                     </span>
                     <span className="profile-photo-card-face profile-photo-card-front">
-                      <img src={photoSrc} alt="个人照片" />
+                      <img src={photoSrc} srcSet={photoSrc === '/profile-photo.jpg' ? '/profile-photo-display.webp 1280w, /profile-photo.jpg 3584w' : undefined} sizes="(max-width: 800px) 250px, 390px" alt="个人照片" decoding="async" />
                     </span>
                   </span>
                 </button>
@@ -1052,32 +1042,25 @@ function ContactCallout({ title = "Thank you" }) {
 }
 
 function EndingAnimation() {
-  const videoRef = useRef(null);
-  const [hasEntered, setHasEntered] = useState(false);
-
-  useLoopVideo(videoRef, setHasEntered, true);
-
   return (
-    <video
-      ref={videoRef}
-      className={`contact-ending-animation${hasEntered ? ' has-entered' : ''}`}
-      src="/ending-cat.mp4"
-      poster="/ending-cat-poster.jpg"
-      preload="none"
+    <img
+      className="contact-ending-animation"
+      onLoad={event => event.currentTarget.classList.add('has-entered')}
+      src="/ending-cat-loop-20261013.webp"
+      loading="lazy"
+      decoding="async"
       width="1280"
       height="720"
-      loop
-      muted
-      playsInline
+      alt=""
       aria-hidden="true"
     />
   );
 }
 
 const showcaseVideos = [
-  { src: "/video-01.mp4", poster: "/video-01-poster.jpg", duration: "00:50", title: "AI character study", description: "角色、场景与镜头节奏的动态视觉实验。" },
-  { src: "/video-02.mp4", poster: "/video-02-poster.jpg", duration: "01:04", title: "Digital human", description: "数字人内容与品牌表达的动态设计。" },
-  { src: "/video-03.mp4", poster: "/video-03-poster.jpg", duration: "01:09", title: "Festival campaign", description: "节日氛围、角色表演与短片剪辑。" },
+  { src: "/video-01.mp4", preview: "/video-01-preview-20261013.mp4", poster: "/video-01-poster.jpg", duration: "00:50", title: "AI character study", description: "角色、场景与镜头节奏的动态视觉实验。" },
+  { src: "/video-02.mp4", preview: "/video-02-preview-20261013.mp4", poster: "/video-02-poster.jpg", duration: "01:04", title: "Digital human", description: "数字人内容与品牌表达的动态设计。" },
+  { src: "/video-03.mp4", preview: "/video-03-preview-20261013.mp4", poster: "/video-03-poster.jpg", duration: "01:09", title: "Festival campaign", description: "节日氛围、角色表演与短片剪辑。" },
 ];
 
 function VideoShowcase() {
@@ -1158,7 +1141,7 @@ function VideoShowcase() {
       dialogRef.current?.close();
       const source = inlineVideos.current[activeVideo];
       if (source) {
-        source.currentTime = playbackState.current.time;
+        source.currentTime = Number.isFinite(source.duration) && source.duration > 0 ? playbackState.current.time % source.duration : 0;
       }
       setActiveVideo(null);
       setIsClosing(false);
@@ -1184,7 +1167,7 @@ function VideoShowcase() {
             onPointerEnter={event => { if (event.pointerType === 'mouse' && window.matchMedia('(hover: hover) and (pointer: fine)').matches) setPreviewVideo(index); }}
             onFocus={() => setPreviewVideo(index)} onBlur={() => setPreviewVideo(1)}
             onClick={() => openVideo(index)} aria-label={"放大播放视频 " + (index + 1)}>
-            <video ref={node => { inlineVideos.current[index] = node; }} src={video.src} poster={video.poster} muted loop playsInline preload="none" />
+            <video ref={node => { inlineVideos.current[index] = node; }} src={video.preview} poster={video.poster} muted loop playsInline preload="none" />
             <span className="video-tile-title"><strong><BlurText by="words">{video.title}</BlurText></strong><span><BlurText delay={90}>{video.duration}</BlurText></span></span>
             <span className="video-tile-play" aria-hidden="true">↗</span>
           </button>

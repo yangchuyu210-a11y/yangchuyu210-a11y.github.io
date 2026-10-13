@@ -24,6 +24,9 @@
 .cover-integrated .studio-footer .play-disc{width:47px;height:47px;background:#0d2340c9}
 
 /* One presentation panel: subdued alternatives flank the selected identity. */
+.motion-heading h2,.collection-heading h2{font-size:clamp(37px,3.8vw,56px);line-height:1.32}
+@media(max-width:800px){.motion-heading h2,.collection-heading h2{font-size:39px}}
+@media(max-width:600px){.motion-heading h2,.collection-heading h2{font-size:32px;line-height:1.4}}
 .chapter.concept-overview{padding-top:45px;padding-bottom:65px}
 .concept-overview .chapter-meta{margin-bottom:32px}
 .concept-heading{text-align:center;margin:0 auto 40px;max-width:850px}

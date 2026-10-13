@@ -71,7 +71,7 @@ document.querySelectorAll('[data-image]').forEach(button=>button.addEventListene
   dialogImage.src=button.dataset.image;
   dialogImage.alt=button.querySelector('img')?.alt||button.dataset.imageTitle||'中国时空北斗主题数字人完整效果图';
   mediaError.hidden=true;
-  dialogTitle.textContent=button.dataset.imageTitle||'中国时空集团 · 北斗主题数字人最终效果';
+  dialogTitle.textContent=button.dataset.imageTitle||'中国时空集团 北斗主题数字人最终效果';
   showMedia(event);
 }));
 document.querySelector('#close-dialog').addEventListener('click',closeMedia);
@@ -175,7 +175,7 @@ stageVideo.addEventListener('error',()=>{
 });
 
 document.querySelector('#stage-expand').addEventListener('click',event=>{
-  openVideo(selectedGesture.dataset.gesture,`${selectedGesture.dataset.name} · ${selectedGesture.dataset.context}`,event);
+  openVideo(selectedGesture.dataset.gesture,`${selectedGesture.dataset.name} ${selectedGesture.dataset.context}`,event);
 });
 
 // Reveal the single full scene once as it enters the reading flow.
