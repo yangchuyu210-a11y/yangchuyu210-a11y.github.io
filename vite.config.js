@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [{
     name: "github-pages-entries",
     apply: "build",
-    closeBundle() {
+    writeBundle() {
       for (const route of ["work", "video", "contact", "yangchuyu", "work/lovel", "work/soni", "work/pine-valley", "work/kyrosai", "work/delane"]) {
         const directory = join("dist", route);
         mkdirSync(directory, { recursive: true });

@@ -1,148 +1,294 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101416">
-<meta name="description" content="Dify AI 人物换装工作流设计：三步图像生成，参考图驱动的提示词自动整合。">
-<title>AI 人物换装工作流设计 项目作品页</title>
-<link rel="stylesheet" href="styles.css">
-<script src="script.js" defer></script>
+<!doctype html>
+
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="theme-color" content="#101416">
+
+<meta name="description" content="Dify AI 人物换装工作流设计：三步图像生成，参考图驱动的提示词自动整合。">
+
+<title>AI 人物换装工作流设计 项目作品页</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<script src="script.js" defer></script>
+
 <link rel="stylesheet" href="../case-return.css">
-</head>
+</head>
+
 <body>
-<a class="portfolio-home-link" href="/" aria-label="返回作品集首页"><span aria-hidden="true">←</span>返回首页</a>
-<!-- Original project images supplied by the user through Figma: https://www.figma.com/design/Zd92uqfXviKz8cCmoig0j1/Untitled?node-id=11-67 . Source pixels are preserved; presentation uses CSS framing. -->
-<!-- Direction: the user's dark portfolio identity, refined as a graphite studio canvas with precise workflow notation. Real image studies lead; reasoning, implementation and supplied evidence follow. Single outfit preview, draggable comparison, no image dialogs. -->
-<svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
-<symbol id="arrow-right" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
-<symbol id="arrow-down" viewBox="0 0 24 24"><path d="M12 4v16m-6-6 6 6 6-6"/></symbol>
-<symbol id="arrow-up-right" viewBox="0 0 24 24"><path d="M6 18 18 6M6 6h12v12"/></symbol>
-<symbol id="image-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 5-5 4 4 3-3 6 6"/></symbol>
-<symbol id="copy-icon" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
-<symbol id="reset-icon" viewBox="0 0 24 24"><path d="M4 9a8 8 0 1 1 0 6M4 4v5h5"/></symbol>
-<symbol id="compare-icon" viewBox="0 0 24 24"><path d="m8 8-4 4 4 4m8-8 4 4-4 4M12 5v14"/></symbol>
-<symbol id="check-icon" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
-</defs></svg>
-<a class="skip-link" href="#main">跳到项目内容</a>
-<div class="portfolio-sheet">
-<header class="site-header">
-<a class="wordmark" href="#top" aria-label="回到作品页顶部">Selected work<span class="brand-dot"></span></a>
-<nav aria-label="项目章节"><a href="#overview">项目概览</a><a href="#workflow">工作流设计</a><a href="#prompt">提示词拓展</a><a href="#impact">效果验证</a></nav>
-<span class="reading"><span id="reading-progress">0%</span><span>阅读进度</span></span>
-<div class="progress-line" id="progress-line"></div>
-</header>
-<main id="main">
-<div class="journey-thread" aria-hidden="true"></div>
-<section class="hero section-surface" id="top" aria-labelledby="project-title"><span class="chapter-pin" aria-hidden="true"></span><div class="page-width">
-<div class="section-rule"><span>拥抱变化 不断创新</span><span class="rule"></span><span lang="en">AI Technology Practice</span></div>
-<div class="hero-grid">
-<svg class="hero-texture" viewBox="0 0 440 640" aria-hidden="true" focusable="false">
-  <defs><pattern id="image-grain" width="16" height="16" patternUnits="userSpaceOnUse"><rect x="1" y="2" width="1.4" height="1.4" opacity=".55"/><rect x="10" y="5" width=".8" height=".8" opacity=".8"/><rect x="5" y="12" width="1" height="1" opacity=".45"/><rect x="13" y="14" width="1.8" height="1.8" opacity=".3"/><rect x="7" y="7" width=".7" height=".7" opacity=".6"/></pattern></defs>
-  <rect width="440" height="640" fill="url(#image-grain)"/>
-</svg>
-<div class="hero-copy">
-<h1 id="project-title">AI 人物换装<br>工作流设计</h1>
-<p class="hero-en" lang="en">Less prompting<br><span>More creating</span></p>
-<p class="hero-description">从一张人物原图，到一次全新的造型。<br>把复杂的描述过程，转化为轻量、可复用的创作流程。</p>
-<a class="primary-link" href="#workflow">探索设计过程 <span><svg class="icon"><use href="#arrow-down"/></svg></span></a>
-<div class="hero-details"><span>Dify</span><span>Gemini 2.5 Flash</span><span>i2i 图像生成</span></div>
-</div>
-<div class="outfit-study" aria-label="人物换装效果预览">
-<div class="study-top"><span><svg class="icon"><use href="#image-icon"/></svg>造型研究</span><span lang="en">Image to image</span></div>
-<div class="study-stage">
-<div class="study-rail rail-left"><span lang="en">ONE IDENTITY</span><i></i><span>人物特征</span></div>
-<div class="study-photo" id="hero-preview" role="tabpanel" aria-labelledby="look-tab-1">
-<img class="study-image original-study" src="assets/b1c6b0c9623e1e88081ab5f0be84ee3c6c132db4.png" alt="人物原图：蓝色发辫，红白上衣与灰色长裤" width="1080" height="1920" fetchpriority="high" aria-hidden="true">
-<img class="study-image generated-study is-visible" src="assets/95fa758add32791e13ff12768327c910dc89d78c.png" alt="AI 换装成果：蓝银色啦啦队服与体育场场景" width="768" height="1344" fetchpriority="high">
-<span class="photo-caption" id="look-caption">蓝银色啦啦队造型</span>
-</div>
-<div class="study-rail rail-right"><span lang="en">NEW EXPRESSION</span><i></i><span>造型重构</span></div>
-<span class="registration reg-tl"></span><span class="registration reg-tr"></span><span class="registration reg-bl"></span><span class="registration reg-br"></span>
-</div>
-<div class="study-bottom"><div class="look-tabs" role="tablist" aria-label="切换换装效果"><button id="look-tab-0" role="tab" aria-selected="false" tabindex="-1" aria-controls="hero-preview" data-look="0">人物原图</button><button id="look-tab-1" role="tab" aria-selected="true" aria-controls="hero-preview" data-look="1">换装成果</button></div><span class="study-note">点击切换前后造型</span></div>
-</div></div>
-<div class="hero-bottom"><span>需求拆解 <i></i> 节点编排 <i></i> 体验简化</span><span lang="en">A workflow designed for creation</span></div>
-</div></section>
-
-<section class="chapter overview section-surface" id="overview" aria-labelledby="overview-title"><span class="chapter-pin" aria-hidden="true"></span><div class="page-width">
-<div class="chapter-heading"><h2 id="overview-title">从功能节点<br>到完整工作流</h2><div class="heading-aside"><span lang="en">From nodes to workflow</span><p>优先梳理功能节点，用流程节点串联。<br>先跑通单线程，再考虑批量处理或分支流程。</p></div></div>
-<div class="method-workbench">
-<div class="workbench-heading"><h3>先跑通一条线再扩展更多可能</h3><span>点击节点，查看设计决策</span></div>
-<div class="method-tabs" role="tablist" aria-label="工作流搭建思路" aria-orientation="horizontal">
-<button role="tab" id="method-tab-0" aria-controls="method-panel" aria-selected="true" data-method="0"><span class="method-node"><span class="method-index">01</span><svg class="node-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="6" y="6" width="8" height="8" rx="1"/><rect x="18" y="6" width="8" height="8" rx="1"/><rect x="6" y="18" width="8" height="8" rx="1"/><rect x="18" y="18" width="8" height="8" rx="1"/></svg></span><strong>定义功能</strong><span class="method-caption">明确每个节点的职责</span><span class="method-connector" aria-hidden="true"></span></button>
-<button role="tab" id="method-tab-1" aria-controls="method-panel" aria-selected="false" tabindex="-1" data-method="1"><span class="method-node"><span class="method-index">02</span><svg class="node-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="11" width="8" height="10" rx="2"/><rect x="21" y="11" width="8" height="10" rx="2"/><path d="M11 16h10m-4-4 4 4-4 4"/></svg></span><strong>串联流程</strong><span class="method-caption">把输入、生成与输出连接起来</span><span class="method-connector" aria-hidden="true"></span></button>
-<button role="tab" id="method-tab-2" aria-controls="method-panel" aria-selected="false" tabindex="-1" data-method="2"><span class="method-node"><span class="method-index">03</span><svg class="node-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M25 9a12 12 0 1 0 2 9M25 3v6h-6m-9 7 4 4 8-9"/></svg></span><strong>单线验证</strong><span class="method-caption">先确认最小闭环能跑通</span><span class="method-connector" aria-hidden="true"></span></button>
-<button role="tab" id="method-tab-3" aria-controls="method-panel" aria-selected="false" tabindex="-1" data-method="3"><span class="method-node"><span class="method-index">04</span><svg class="node-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="12" width="7" height="8" rx="1"/><rect x="22" y="3" width="7" height="8" rx="1"/><rect x="22" y="21" width="7" height="8" rx="1"/><path d="M10 16h6V7h6m-6 9v9h6"/></svg></span><strong>批量迭代</strong><span class="method-caption">按需求引入迭代与分支</span></button>
-</div>
-<div class="method-phases" aria-hidden="true"><span>先跑通单线程</span><span>再扩展复杂需求</span></div>
-<div class="method-detail" id="method-panel" role="tabpanel" aria-labelledby="method-tab-0" tabindex="0"><span id="method-detail-label">功能先行</span><p id="method-detail-text">优先梳理功能性节点：换装需要图像编辑，参考图解析需要 LLM。先明确每个节点的职责，再考虑如何连接。</p></div>
-</div>
-</div></section>
-
-<section class="chapter workflow section-surface" id="workflow" aria-labelledby="workflow-title"><span class="chapter-pin" aria-hidden="true"></span><div class="page-width">
-<div class="chapter-heading"><h2 id="workflow-title">三步完成<br>一次人物换装</h2><div class="heading-aside"><span lang="en">A lightweight workflow</span><p>上传图片、描述服装、获取结果。<br>将 i2i 能力封装成一条清晰路径。</p></div></div>
-<ol class="simple-flow"><li><span>01 / 输入</span><h3>人物原图与提示词</h3><p>Image 文件 · Prompt 文本</p><svg class="icon"><use href="#arrow-right"/></svg></li><li><span>02 / 生成</span><h3>Gemini 图像编辑</h3><p>结合人物与服装需求，生成新图</p><svg class="icon"><use href="#arrow-right"/></svg></li><li><span>03 / 输出</span><h3>获取换装结果</h3><p>输出处理后的图片</p><svg class="icon"><use href="#check-icon"/></svg></li></ol>
-<figure class="workflow-figure"><div class="figure-toolbar"><span><span class="status-dot"></span>基础换装工作流</span><span>Dify / 3 个节点</span></div><div class="workflow-image basic-workflow" tabindex="0" role="region" aria-label="基础工作流截图，可横向滚动"><img src="assets/8d8a66a00b537578d5684cbd5dc1e27144b6d924.png" alt="Dify 基础工作流：开始节点接收 Prompt 和 Image，图片编辑节点生成，结束节点输出" width="727" height="158" loading="lazy"></div><figcaption>原图与文本共同输入，一个图像编辑节点完成核心任务。</figcaption></figure>
-<div class="configuration-layout"><div class="configuration-copy"><h3>一个图像节点<br>承接两类输入</h3><p>使用 Gemini 2.5 Flash 图片编辑模块，将文本要求与人物原图一起送入模型，保持操作路径轻量。</p><dl class="binding-list"><div><dt><span>Text</span>文字指令</dt><dd>开始节点 / Prompt</dd></div><div><dt><span>Image</span>视觉输入</dt><dd>开始节点 / Image File</dd></div><div><dt><span>Result</span>生成输出</dt><dd>图片编辑 / 输出图片</dd></div></dl></div><figure class="configuration-image"><div class="config-caption"><span>节点配置</span><span>文本 × 图像</span></div><img src="assets/f71755d2a2517116f967a976376827e28ebfb972.png" alt="图片编辑节点配置：Gemini 模型、Prompt 系统指令与 Image File 视觉输入" width="695" height="768" loading="lazy"></figure></div>
-<div class="result-study"><div class="result-heading"><h3>同一个人物新的视觉表达</h3><span><svg class="icon"><use href="#compare-icon"/></svg>拖动分界线对比</span></div>
-<div class="comparison-layout"><div class="comparison" style="--split:50%"><img src="assets/95fa758add32791e13ff12768327c910dc89d78c.png" alt="换装后，人物穿着蓝银色啦啦队服，坐在体育场" width="768" height="1344" loading="lazy"><img class="comparison-before" src="assets/b1c6b0c9623e1e88081ab5f0be84ee3c6c132db4.png" alt="换装前，人物穿着红白上衣和灰色长裤" width="1080" height="1920" loading="lazy"><span class="comparison-label before-label">原图</span><span class="comparison-label after-label">换装后</span><div class="comparison-handle" aria-hidden="true"><span><svg class="icon"><use href="#compare-icon"/></svg></span></div><input type="range" id="compare-slider" min="0" max="100" value="50" aria-label="调整换装前后图片分界线" aria-valuetext="原图显示 50%"></div>
-<div class="comparison-copy"><span class="result-caption" lang="en">From prompt to a new look</span><h4>从文字描述<br>到完整造型</h4><p>人物原图提供视觉基础，服装描述引导新的造型。生成结果同时呈现服装、姿势与场景的变化。</p><dl class="visual-changes"><div><dt>人物特征</dt><dd>保留金发、蓝色发辫等视觉线索</dd></div><div><dt>服装造型</dt><dd>红白上衣 → 蓝银色啦啦队服</dd></div><div><dt>姿势场景</dt><dd>室内坐姿 → 体育场看台造型</dd></div></dl><div class="comparison-footer"><button id="compare-reset" class="underlined-button">重置对比 <svg class="icon"><use href="#reset-icon"/></svg></button><span>项目生成样例</span></div></div></div>
-</div></div></section>
-
-<section class="chapter prompt-section section-surface" id="prompt" aria-labelledby="prompt-title"><span class="chapter-pin" aria-hidden="true"></span><div class="page-width">
-<div class="chapter-heading"><h2 id="prompt-title">把参考图<br>变成可用的提示词</h2><div class="heading-aside"><span lang="en">From reference to prompt</span><p>参考图自动生成提示词，<br>让用户选择与调整多套组合方案。</p></div></div>
-<div class="prompt-brief"><h3>降低提示词编写门槛</h3><p>针对不会撰写提示词的用户，通过姿势参考图与服装参考图，自动生成多套组合后的提示词，供用户选择和调整。</p></div>
-<div class="reference-composition"><div class="reference-pair">
-<figure><div class="reference-label"><span>姿势参考</span><span lang="en">Pose</span></div><img src="assets/b233dce361561d4d849ea74598e8dfbedf86e484.jpg" alt="姿势参考：人物坐在体育场座位，举起手臂" width="1080" height="1621" loading="lazy"><figcaption>坐姿 · 举手动作 · 视角</figcaption></figure>
-<figure><div class="reference-label"><span>服装参考</span><span lang="en">Outfit</span></div><img src="assets/2559a291db90cbf27c7f741a5c8ecc522118404c.jpg" alt="服装参考：蓝白色啦啦队服，白色短裤与星形装饰" width="1080" height="1920" loading="lazy"><figcaption>服装款式 · 配色 · 装饰细节</figcaption></figure>
-<div class="reference-join"><span></span><svg class="icon"><use href="#arrow-right"/></svg><span></span></div></div>
-<div class="prompt-output"><div class="prompt-topline"><span><span class="status-dot"></span>描述整合</span><button id="copy-prompt" class="copy-button">复制完整提示词 <svg class="icon"><use href="#copy-icon"/></svg></button></div><h3>让图片中的细节<br>成为生成的依据</h3>
-<div class="prompt-tabs" role="tablist" aria-label="提示词内容"><button role="tab" id="prompt-tab-0" aria-controls="prompt-panel" aria-selected="true" data-prompt="0">人物与姿势</button><button role="tab" id="prompt-tab-1" aria-controls="prompt-panel" aria-selected="false" tabindex="-1" data-prompt="1">服装与妆容</button><button role="tab" id="prompt-tab-2" aria-controls="prompt-panel" aria-selected="false" tabindex="-1" data-prompt="2">完整提示词</button></div>
-<div class="prompt-panel" id="prompt-panel" role="tabpanel" aria-labelledby="prompt-tab-0" tabindex="0"><p id="prompt-text">一个约20岁的欧美少女啦啦队员，棕色皮肤，金发碧眼，面带甜美笑容，正面直视镜头。坐姿，一条腿自然垂下，另一条腿蜷曲，上半身微微倾斜，一只胳膊高高举起，另一只胳膊拿着水瓶放在嘴边。
-
-人物占据画面约三分之二，背景是体育场看台和跑道，视角略微仰视，中景镜头。</p></div><div class="prompt-foot"><span>来自项目中的生成描述样例</span><span lang="en">Reference → Description</span></div></div></div>
-<div class="extension-heading"><h3>从参考图特征<br>到多套完整提示词</h3><p>输入姿势参考图、服装参考图与提示词变量，<br>经特征提取、批量描述和整合后输出数组。</p></div>
-<figure class="workflow-figure extended-figure"><div class="figure-toolbar"><span><span class="status-dot"></span>参考图驱动的提示词工作流</span><span>Dify / 迭代批量输出</span></div><div class="workflow-image extended-workflow" tabindex="0" role="region" aria-label="提示词工作流截图，可横向滚动"><img src="assets/1ed286d2009ac5c328a1194c5b045a5313578a2f.png" alt="提示词工作流：开始、参数提取器、包含姿势描述与服装描述及提示词整合的迭代节点，最后输出数组" width="1518" height="429" loading="lazy"></div><figcaption>参考图分别提供姿势与服装信息，输出多套可直接使用的提示词数组。<span class="scroll-note">窄屏可横向滚动查看</span></figcaption></figure>
-<ol class="extended-decisions"><li><span>01</span><div><h4>提取特征</h4><p>参数提取器分别提取姿势与服装参考图中的元素特征。</p></div></li><li><span>02</span><div><h4>批量描述</h4><p>通过迭代节点，批量生成多套组合描述。</p></div></li><li><span>03</span><div><h4>整合提示词</h4><p>由 LLM 将描述整合为完整提示词。</p></div></li><li><span>04</span><div><h4>数组输出</h4><p>输出多套可直接使用的提示词，供用户选择与调整。</p></div></li></ol>
-<div class="prompt-value"><span>设计价值</span><p>减少提示词撰写困难，提升生成结果与用户预期的匹配度。</p></div>
-</div></section>
-
-<section class="chapter impact section-surface" id="impact" aria-labelledby="impact-title"><span class="chapter-pin" aria-hidden="true"></span><div class="page-width">
-<div class="chapter-heading"><h2 id="impact-title">更少的编写成本<br>更高的结果匹配度</h2><div class="heading-aside"><span lang="en">A better flow<br>A better outcome</span><p>从手动编写，到参考图辅助生成。<br>工作流的价值，最终体现在使用体验上。</p></div></div>
-<div class="evidence-grid">
-<article class="evidence">
-<div class="evidence-heading"><h3>提示词平均编写时长</h3><span>用时更短</span></div>
-<div class="metric-delta"><strong>−81.9<span>%</span></strong><p>平均节省 <b>10.4 分钟</b></p></div>
-<div class="metric-chart" role="img" aria-label="提示词平均编写时长：优化前 12.7 分钟，优化后 2.3 分钟，减少 81.9%。纵轴从 0 到 15 分钟。">
-<div class="metric-axis" aria-hidden="true"><span>15</span><span>10</span><span>5</span><span>0</span></div><div class="metric-grid" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-<div class="metric-columns" aria-hidden="true">
-<div class="metric-column" style="--height:84.6667%"><span class="column-value">12.7<small>分钟</small></span><div class="metric-bar"></div><span class="column-period">优化前</span></div>
-<div class="metric-column improved" style="--height:15.3333%"><span class="column-value">2.3<small>分钟</small></span><div class="metric-bar"></div><span class="column-period">优化后</span></div>
-</div></div>
-<p class="metric-conclusion">把时间从编写描述，交还给创作与选择。</p>
-</article>
-<article class="evidence">
-<div class="evidence-heading"><h3>生成结果符合预期的比例</h3><span>匹配更高</span></div>
-<div class="metric-delta"><strong>+36.3<span>个百分点</span></strong><p>从 <b>42.3%</b> 提升至 <b>78.6%</b></p></div>
-<div class="metric-chart" role="img" aria-label="生成结果符合预期的比例：优化前 42.3%，优化后 78.6%，提高 36.3 个百分点。纵轴从 0 到 100%。">
-<div class="metric-axis" aria-hidden="true"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0</span></div><div class="metric-grid" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-<div class="metric-columns" aria-hidden="true">
-<div class="metric-column" style="--height:42.3%"><span class="column-value">42.3<small>%</small></span><div class="metric-bar"></div><span class="column-period">优化前</span></div>
-<div class="metric-column improved" style="--height:78.6%"><span class="column-value">78.6<small>%</small></span><div class="metric-bar"></div><span class="column-period">优化后</span></div>
-</div></div>
-<p class="metric-conclusion">用参考图补全细节，让生成更接近预期。</p>
-</article>
-</div>
-<p class="data-source">数据来自项目设计分析资料；81.9% 为按 12.7 → 2.3 分钟计算的降幅。资料未提供样本量与测试周期。</p>
-<div class="reflection"><div><span lang="en">Design takeaway</span><h3>让 AI 能力<br>成为更容易使用的工具</h3></div><p>以功能节点为起点，用流程节点组织路径。先验证单一线程，再根据真实痛点扩展参考图解析与批量迭代，把一次生成变成可复用的创作流程。</p></div>
-</div></section>
-</main>
-<footer class="page-width"><div class="footer-top"><span>AI 人物换装工作流设计</span><a href="https://www.figma.com/design/Zd92uqfXviKz8cCmoig0j1/Untitled?node-id=11-67" target="_blank" rel="noopener noreferrer">查看项目原始资料 <svg class="icon"><use href="#arrow-up-right"/></svg></a></div><div class="footer-bottom"><span lang="en">End of case study</span><a href="#top">回到顶部 <svg class="icon"><use href="#arrow-down"/></svg></a></div></footer>
-</div>
-<div id="toast" role="status" aria-live="polite"></div>
-</body>
-</html>
-
-
-
+<a class="portfolio-home-link" href="/" aria-label="返回作品集首页"><span aria-hidden="true">←</span>返回首页</a>
+
+<!-- Original project images supplied by the user through Figma: https://www.figma.com/design/Zd92uqfXviKz8cCmoig0j1/Untitled?node-id=11-67 . Source pixels are preserved; presentation uses CSS framing. -->
+
+<!-- Direction: the user's dark portfolio identity, refined as a graphite studio canvas with precise workflow notation. Real image studies lead; reasoning, implementation and supplied evidence follow. Single outfit preview, draggable comparison, no image dialogs. -->
+
+<svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+
+<symbol id="arrow-right" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+
+<symbol id="arrow-down" viewBox="0 0 24 24"><path d="M12 4v16m-6-6 6 6 6-6"/></symbol>
+
+<symbol id="arrow-up-right" viewBox="0 0 24 24"><path d="M6 18 18 6M6 6h12v12"/></symbol>
+
+<symbol id="image-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 5-5 4 4 3-3 6 6"/></symbol>
+
+<symbol id="copy-icon" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+
+<symbol id="reset-icon" viewBox="0 0 24 24"><path d="M4 9a8 8 0 1 1 0 6M4 4v5h5"/></symbol>
+
+<symbol id="compare-icon" viewBox="0 0 24 24"><path d="m8 8-4 4 4 4m8-8 4 4-4 4M12 5v14"/></symbol>
+
+<symbol id="check-icon" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+
+</defs></svg>
+
+<a class="skip-link" href="#main">跳到项目内容</a>
+
+<div class="portfolio-sheet">
+
+<header class="site-header">
+
+<a class="wordmark" href="#top" aria-label="回到作品页顶部">Selected work<span class="brand-dot"></span></a>
+
+<nav aria-label="项目章节"><a href="#overview">项目概览</a><a href="#workflow">工作流设计</a><a href="#prompt">提示词拓展</a><a href="#impact">效果验证</a></nav>
+
+<span class="reading"><span id="reading-progress">0%</span><span>阅读进度</span></span>
+
+<div class="progress-line" id="progress-line"></div>
+
+</header>
+
+<main id="main">
+
+<div class="journey-thread" aria-hidden="true"></div>
+
+<section class="hero section-surface" id="top" aria-labelledby="project-title"><span class="chapter-pin" aria-hidden="true"></span><div class="page-width">
+
+<div class="section-rule"><span>拥抱变化 不断创新</span><span class="rule"></span><span lang="en">AI Technology Practice</span></div>
+
+<div class="hero-grid">
+
+<svg class="hero-texture" viewBox="0 0 440 640" aria-hidden="true" focusable="false">
+
+  <defs><pattern id="image-grain" width="16" height="16" patternUnits="userSpaceOnUse"><rect x="1" y="2" width="1.4" height="1.4" opacity=".55"/><rect x="10" y="5" width=".8" height=".8" opacity=".8"/><rect x="5" y="12" width="1" height="1" opacity=".45"/><rect x="13" y="14" width="1.8" height="1.8" opacity=".3"/><rect x="7" y="7" width=".7" height=".7" opacity=".6"/></pattern></defs>
+
+  <rect width="440" height="640" fill="url(#image-grain)"/>
+
+</svg>
+
+<div class="hero-copy">
+
+<h1 id="project-title">AI 人物换装<br>工作流设计</h1>
+
+<p class="hero-en" lang="en">Less prompting<br><span>More creating</span></p>
+
+<p class="hero-description">从一张人物原图，到一次全新的造型。<br>把复杂的描述过程，转化为轻量、可复用的创作流程。</p>
+
+<a class="primary-link" href="#workflow">探索设计过程 <span><svg class="icon"><use href="#arrow-down"/></svg></span></a>
+
+<div class="hero-details"><span>Dify</span><span>Gemini 2.5 Flash</span><span>i2i 图像生成</span></div>
+
+</div>
+
+<div class="outfit-study" aria-label="人物换装效果预览">
+
+<div class="study-top"><span><svg class="icon"><use href="#image-icon"/></svg>造型研究</span><span lang="en">Image to image</span></div>
+
+<div class="study-stage">
+
+<div class="study-rail rail-left"><span lang="en">ONE IDENTITY</span><i></i><span>人物特征</span></div>
+
+<div class="study-photo" id="hero-preview" role="tabpanel" aria-labelledby="look-tab-1">
+
+<img class="study-image original-study" src="assets/b1c6b0c9623e1e88081ab5f0be84ee3c6c132db4.png" alt="人物原图：蓝色发辫，红白上衣与灰色长裤" width="1080" height="1920" fetchpriority="high" aria-hidden="true" srcset="assets/b1c6b0c9623e1e88081ab5f0be84ee3c6c132db4-display.webp 1080w" sizes="(max-width: 760px) 100vw, 1440px" decoding="async">
+
+<img class="study-image generated-study is-visible" src="assets/95fa758add32791e13ff12768327c910dc89d78c.png" alt="AI 换装成果：蓝银色啦啦队服与体育场场景" width="768" height="1344" fetchpriority="high" srcset="assets/95fa758add32791e13ff12768327c910dc89d78c-display.webp 768w" sizes="(max-width: 760px) 100vw, 1440px" decoding="async">
+
+<span class="photo-caption" id="look-caption">蓝银色啦啦队造型</span>
+
+</div>
+
+<div class="study-rail rail-right"><span lang="en">NEW EXPRESSION</span><i></i><span>造型重构</span></div>
+
+<span class="registration reg-tl"></span><span class="registration reg-tr"></span><span class="registration reg-bl"></span><span class="registration reg-br"></span>
+
+</div>
+
+<div class="study-bottom"><div class="look-tabs" role="tablist" aria-label="切换换装效果"><button id="look-tab-0" role="tab" aria-selected="false" tabindex="-1" aria-controls="hero-preview" data-look="0">人物原图</button><button id="look-tab-1" role="tab" aria-selected="true" aria-controls="hero-preview" data-look="1">换装成果</button></div><span class="study-note">点击切换前后造型</span></div>
+
+</div></div>
+
+<div class="hero-bottom"><span>需求拆解 <i></i> 节点编排 <i></i> 体验简化</span><span lang="en">A workflow designed for creation</span></div>
+
+</div></section>
+
+
+
+<section class="chapter overview section-surface" id="overview" aria-labelledby="overview-title"><span class="chapter-pin" aria-hidden="true"></span><div class="page-width">
+
+<div class="chapter-heading"><h2 id="overview-title">从功能节点<br>到完整工作流</h2><div class="heading-aside"><span lang="en">From nodes to workflow</span><p>优先梳理功能节点，用流程节点串联。<br>先跑通单线程，再考虑批量处理或分支流程。</p></div></div>
+
+<div class="method-workbench">
+
+<div class="workbench-heading"><h3>先跑通一条线再扩展更多可能</h3><span>点击节点，查看设计决策</span></div>
+
+<div class="method-tabs" role="tablist" aria-label="工作流搭建思路" aria-orientation="horizontal">
+
+<button role="tab" id="method-tab-0" aria-controls="method-panel" aria-selected="true" data-method="0"><span class="method-node"><span class="method-index">01</span><svg class="node-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="6" y="6" width="8" height="8" rx="1"/><rect x="18" y="6" width="8" height="8" rx="1"/><rect x="6" y="18" width="8" height="8" rx="1"/><rect x="18" y="18" width="8" height="8" rx="1"/></svg></span><strong>定义功能</strong><span class="method-caption">明确每个节点的职责</span><span class="method-connector" aria-hidden="true"></span></button>
+
+<button role="tab" id="method-tab-1" aria-controls="method-panel" aria-selected="false" tabindex="-1" data-method="1"><span class="method-node"><span class="method-index">02</span><svg class="node-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="11" width="8" height="10" rx="2"/><rect x="21" y="11" width="8" height="10" rx="2"/><path d="M11 16h10m-4-4 4 4-4 4"/></svg></span><strong>串联流程</strong><span class="method-caption">把输入、生成与输出连接起来</span><span class="method-connector" aria-hidden="true"></span></button>
+
+<button role="tab" id="method-tab-2" aria-controls="method-panel" aria-selected="false" tabindex="-1" data-method="2"><span class="method-node"><span class="method-index">03</span><svg class="node-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M25 9a12 12 0 1 0 2 9M25 3v6h-6m-9 7 4 4 8-9"/></svg></span><strong>单线验证</strong><span class="method-caption">先确认最小闭环能跑通</span><span class="method-connector" aria-hidden="true"></span></button>
+
+<button role="tab" id="method-tab-3" aria-controls="method-panel" aria-selected="false" tabindex="-1" data-method="3"><span class="method-node"><span class="method-index">04</span><svg class="node-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="12" width="7" height="8" rx="1"/><rect x="22" y="3" width="7" height="8" rx="1"/><rect x="22" y="21" width="7" height="8" rx="1"/><path d="M10 16h6V7h6m-6 9v9h6"/></svg></span><strong>批量迭代</strong><span class="method-caption">按需求引入迭代与分支</span></button>
+
+</div>
+
+<div class="method-phases" aria-hidden="true"><span>先跑通单线程</span><span>再扩展复杂需求</span></div>
+
+<div class="method-detail" id="method-panel" role="tabpanel" aria-labelledby="method-tab-0" tabindex="0"><span id="method-detail-label">功能先行</span><p id="method-detail-text">优先梳理功能性节点：换装需要图像编辑，参考图解析需要 LLM。先明确每个节点的职责，再考虑如何连接。</p></div>
+
+</div>
+
+</div></section>
+
+
+
+<section class="chapter workflow section-surface" id="workflow" aria-labelledby="workflow-title"><span class="chapter-pin" aria-hidden="true"></span><div class="page-width">
+
+<div class="chapter-heading"><h2 id="workflow-title">三步完成<br>一次人物换装</h2><div class="heading-aside"><span lang="en">A lightweight workflow</span><p>上传图片、描述服装、获取结果。<br>将 i2i 能力封装成一条清晰路径。</p></div></div>
+
+<ol class="simple-flow"><li><span>01 / 输入</span><h3>人物原图与提示词</h3><p>Image 文件 · Prompt 文本</p><svg class="icon"><use href="#arrow-right"/></svg></li><li><span>02 / 生成</span><h3>Gemini 图像编辑</h3><p>结合人物与服装需求，生成新图</p><svg class="icon"><use href="#arrow-right"/></svg></li><li><span>03 / 输出</span><h3>获取换装结果</h3><p>输出处理后的图片</p><svg class="icon"><use href="#check-icon"/></svg></li></ol>
+
+<figure class="workflow-figure"><div class="figure-toolbar"><span><span class="status-dot"></span>基础换装工作流</span><span>Dify / 3 个节点</span></div><div class="workflow-image basic-workflow" tabindex="0" role="region" aria-label="基础工作流截图，可横向滚动"><img src="assets/8d8a66a00b537578d5684cbd5dc1e27144b6d924.png" alt="Dify 基础工作流：开始节点接收 Prompt 和 Image，图片编辑节点生成，结束节点输出" width="727" height="158" loading="lazy"></div><figcaption>原图与文本共同输入，一个图像编辑节点完成核心任务。</figcaption></figure>
+
+<div class="configuration-layout"><div class="configuration-copy"><h3>一个图像节点<br>承接两类输入</h3><p>使用 Gemini 2.5 Flash 图片编辑模块，将文本要求与人物原图一起送入模型，保持操作路径轻量。</p><dl class="binding-list"><div><dt><span>Text</span>文字指令</dt><dd>开始节点 / Prompt</dd></div><div><dt><span>Image</span>视觉输入</dt><dd>开始节点 / Image File</dd></div><div><dt><span>Result</span>生成输出</dt><dd>图片编辑 / 输出图片</dd></div></dl></div><figure class="configuration-image"><div class="config-caption"><span>节点配置</span><span>文本 × 图像</span></div><img src="assets/f71755d2a2517116f967a976376827e28ebfb972.png" alt="图片编辑节点配置：Gemini 模型、Prompt 系统指令与 Image File 视觉输入" width="695" height="768" loading="lazy"></figure></div>
+
+<div class="result-study"><div class="result-heading"><h3>同一个人物新的视觉表达</h3><span><svg class="icon"><use href="#compare-icon"/></svg>拖动分界线对比</span></div>
+
+<div class="comparison-layout"><div class="comparison" style="--split:50%"><img src="assets/95fa758add32791e13ff12768327c910dc89d78c.png" alt="换装后，人物穿着蓝银色啦啦队服，坐在体育场" width="768" height="1344" loading="lazy" srcset="assets/95fa758add32791e13ff12768327c910dc89d78c-display.webp 768w" sizes="(max-width: 760px) 100vw, 1440px" decoding="async"><img class="comparison-before" src="assets/b1c6b0c9623e1e88081ab5f0be84ee3c6c132db4.png" alt="换装前，人物穿着红白上衣和灰色长裤" width="1080" height="1920" loading="lazy" srcset="assets/b1c6b0c9623e1e88081ab5f0be84ee3c6c132db4-display.webp 1080w" sizes="(max-width: 760px) 100vw, 1440px" decoding="async"><span class="comparison-label before-label">原图</span><span class="comparison-label after-label">换装后</span><div class="comparison-handle" aria-hidden="true"><span><svg class="icon"><use href="#compare-icon"/></svg></span></div><input type="range" id="compare-slider" min="0" max="100" value="50" aria-label="调整换装前后图片分界线" aria-valuetext="原图显示 50%"></div>
+
+<div class="comparison-copy"><span class="result-caption" lang="en">From prompt to a new look</span><h4>从文字描述<br>到完整造型</h4><p>人物原图提供视觉基础，服装描述引导新的造型。生成结果同时呈现服装、姿势与场景的变化。</p><dl class="visual-changes"><div><dt>人物特征</dt><dd>保留金发、蓝色发辫等视觉线索</dd></div><div><dt>服装造型</dt><dd>红白上衣 → 蓝银色啦啦队服</dd></div><div><dt>姿势场景</dt><dd>室内坐姿 → 体育场看台造型</dd></div></dl><div class="comparison-footer"><button id="compare-reset" class="underlined-button">重置对比 <svg class="icon"><use href="#reset-icon"/></svg></button><span>项目生成样例</span></div></div></div>
+
+</div></div></section>
+
+
+
+<section class="chapter prompt-section section-surface" id="prompt" aria-labelledby="prompt-title"><span class="chapter-pin" aria-hidden="true"></span><div class="page-width">
+
+<div class="chapter-heading"><h2 id="prompt-title">把参考图<br>变成可用的提示词</h2><div class="heading-aside"><span lang="en">From reference to prompt</span><p>参考图自动生成提示词，<br>让用户选择与调整多套组合方案。</p></div></div>
+
+<div class="prompt-brief"><h3>降低提示词编写门槛</h3><p>针对不会撰写提示词的用户，通过姿势参考图与服装参考图，自动生成多套组合后的提示词，供用户选择和调整。</p></div>
+
+<div class="reference-composition"><div class="reference-pair">
+
+<figure><div class="reference-label"><span>姿势参考</span><span lang="en">Pose</span></div><img src="assets/b233dce361561d4d849ea74598e8dfbedf86e484.jpg" alt="姿势参考：人物坐在体育场座位，举起手臂" width="1080" height="1621" loading="lazy"><figcaption>坐姿 · 举手动作 · 视角</figcaption></figure>
+
+<figure><div class="reference-label"><span>服装参考</span><span lang="en">Outfit</span></div><img src="assets/2559a291db90cbf27c7f741a5c8ecc522118404c.jpg" alt="服装参考：蓝白色啦啦队服，白色短裤与星形装饰" width="1080" height="1920" loading="lazy"><figcaption>服装款式 · 配色 · 装饰细节</figcaption></figure>
+
+<div class="reference-join"><span></span><svg class="icon"><use href="#arrow-right"/></svg><span></span></div></div>
+
+<div class="prompt-output"><div class="prompt-topline"><span><span class="status-dot"></span>描述整合</span><button id="copy-prompt" class="copy-button">复制完整提示词 <svg class="icon"><use href="#copy-icon"/></svg></button></div><h3>让图片中的细节<br>成为生成的依据</h3>
+
+<div class="prompt-tabs" role="tablist" aria-label="提示词内容"><button role="tab" id="prompt-tab-0" aria-controls="prompt-panel" aria-selected="true" data-prompt="0">人物与姿势</button><button role="tab" id="prompt-tab-1" aria-controls="prompt-panel" aria-selected="false" tabindex="-1" data-prompt="1">服装与妆容</button><button role="tab" id="prompt-tab-2" aria-controls="prompt-panel" aria-selected="false" tabindex="-1" data-prompt="2">完整提示词</button></div>
+
+<div class="prompt-panel" id="prompt-panel" role="tabpanel" aria-labelledby="prompt-tab-0" tabindex="0"><p id="prompt-text">一个约20岁的欧美少女啦啦队员，棕色皮肤，金发碧眼，面带甜美笑容，正面直视镜头。坐姿，一条腿自然垂下，另一条腿蜷曲，上半身微微倾斜，一只胳膊高高举起，另一只胳膊拿着水瓶放在嘴边。
+
+
+
+人物占据画面约三分之二，背景是体育场看台和跑道，视角略微仰视，中景镜头。</p></div><div class="prompt-foot"><span>来自项目中的生成描述样例</span><span lang="en">Reference → Description</span></div></div></div>
+
+<div class="extension-heading"><h3>从参考图特征<br>到多套完整提示词</h3><p>输入姿势参考图、服装参考图与提示词变量，<br>经特征提取、批量描述和整合后输出数组。</p></div>
+
+<figure class="workflow-figure extended-figure"><div class="figure-toolbar"><span><span class="status-dot"></span>参考图驱动的提示词工作流</span><span>Dify / 迭代批量输出</span></div><div class="workflow-image extended-workflow" tabindex="0" role="region" aria-label="提示词工作流截图，可横向滚动"><img src="assets/1ed286d2009ac5c328a1194c5b045a5313578a2f.png" alt="提示词工作流：开始、参数提取器、包含姿势描述与服装描述及提示词整合的迭代节点，最后输出数组" width="1518" height="429" loading="lazy"></div><figcaption>参考图分别提供姿势与服装信息，输出多套可直接使用的提示词数组。<span class="scroll-note">窄屏可横向滚动查看</span></figcaption></figure>
+
+<ol class="extended-decisions"><li><span>01</span><div><h4>提取特征</h4><p>参数提取器分别提取姿势与服装参考图中的元素特征。</p></div></li><li><span>02</span><div><h4>批量描述</h4><p>通过迭代节点，批量生成多套组合描述。</p></div></li><li><span>03</span><div><h4>整合提示词</h4><p>由 LLM 将描述整合为完整提示词。</p></div></li><li><span>04</span><div><h4>数组输出</h4><p>输出多套可直接使用的提示词，供用户选择与调整。</p></div></li></ol>
+
+<div class="prompt-value"><span>设计价值</span><p>减少提示词撰写困难，提升生成结果与用户预期的匹配度。</p></div>
+
+</div></section>
+
+
+
+<section class="chapter impact section-surface" id="impact" aria-labelledby="impact-title"><span class="chapter-pin" aria-hidden="true"></span><div class="page-width">
+
+<div class="chapter-heading"><h2 id="impact-title">更少的编写成本<br>更高的结果匹配度</h2><div class="heading-aside"><span lang="en">A better flow<br>A better outcome</span><p>从手动编写，到参考图辅助生成。<br>工作流的价值，最终体现在使用体验上。</p></div></div>
+
+<div class="evidence-grid">
+
+<article class="evidence">
+
+<div class="evidence-heading"><h3>提示词平均编写时长</h3><span>用时更短</span></div>
+
+<div class="metric-delta"><strong>−81.9<span>%</span></strong><p>平均节省 <b>10.4 分钟</b></p></div>
+
+<div class="metric-chart" role="img" aria-label="提示词平均编写时长：优化前 12.7 分钟，优化后 2.3 分钟，减少 81.9%。纵轴从 0 到 15 分钟。">
+
+<div class="metric-axis" aria-hidden="true"><span>15</span><span>10</span><span>5</span><span>0</span></div><div class="metric-grid" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+<div class="metric-columns" aria-hidden="true">
+
+<div class="metric-column" style="--height:84.6667%"><span class="column-value">12.7<small>分钟</small></span><div class="metric-bar"></div><span class="column-period">优化前</span></div>
+
+<div class="metric-column improved" style="--height:15.3333%"><span class="column-value">2.3<small>分钟</small></span><div class="metric-bar"></div><span class="column-period">优化后</span></div>
+
+</div></div>
+
+<p class="metric-conclusion">把时间从编写描述，交还给创作与选择。</p>
+
+</article>
+
+<article class="evidence">
+
+<div class="evidence-heading"><h3>生成结果符合预期的比例</h3><span>匹配更高</span></div>
+
+<div class="metric-delta"><strong>+36.3<span>个百分点</span></strong><p>从 <b>42.3%</b> 提升至 <b>78.6%</b></p></div>
+
+<div class="metric-chart" role="img" aria-label="生成结果符合预期的比例：优化前 42.3%，优化后 78.6%，提高 36.3 个百分点。纵轴从 0 到 100%。">
+
+<div class="metric-axis" aria-hidden="true"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0</span></div><div class="metric-grid" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+
+<div class="metric-columns" aria-hidden="true">
+
+<div class="metric-column" style="--height:42.3%"><span class="column-value">42.3<small>%</small></span><div class="metric-bar"></div><span class="column-period">优化前</span></div>
+
+<div class="metric-column improved" style="--height:78.6%"><span class="column-value">78.6<small>%</small></span><div class="metric-bar"></div><span class="column-period">优化后</span></div>
+
+</div></div>
+
+<p class="metric-conclusion">用参考图补全细节，让生成更接近预期。</p>
+
+</article>
+
+</div>
+
+<p class="data-source">数据来自项目设计分析资料；81.9% 为按 12.7 → 2.3 分钟计算的降幅。资料未提供样本量与测试周期。</p>
+
+<div class="reflection"><div><span lang="en">Design takeaway</span><h3>让 AI 能力<br>成为更容易使用的工具</h3></div><p>以功能节点为起点，用流程节点组织路径。先验证单一线程，再根据真实痛点扩展参考图解析与批量迭代，把一次生成变成可复用的创作流程。</p></div>
+
+</div></section>
+
+</main>
+
+<footer class="page-width"><div class="footer-top"><span>AI 人物换装工作流设计</span><a href="https://www.figma.com/design/Zd92uqfXviKz8cCmoig0j1/Untitled?node-id=11-67" target="_blank" rel="noopener noreferrer">查看项目原始资料 <svg class="icon"><use href="#arrow-up-right"/></svg></a></div><div class="footer-bottom"><span lang="en">End of case study</span><a href="#top">回到顶部 <svg class="icon"><use href="#arrow-down"/></svg></a></div></footer>
+
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+</body>
+
+</html>
+
+
+
+
+
+
+

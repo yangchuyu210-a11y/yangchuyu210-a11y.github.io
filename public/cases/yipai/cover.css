@@ -1,12 +1,12 @@
 @font-face {
   font-family: CoverDisplay;
-  src: url('assets/title-bold.ttf') format('truetype');
+  src: url('assets/title-bold.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: CoverScript;
-  src: url('assets/handwritten.ttf') format('truetype');
+  src: url('assets/handwritten.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }

@@ -10,11 +10,11 @@ import {
 } from "react-router-dom";
 
 const projects = [
-  { slug: "lovel", name: "一拍入画", service: "运营活动设计", year: "2026", tone: "tone-a", href: "/cases/yipai/index.html?revision=20261012-kv3#cover", cover: "/cases/yipai/assets/campaign-hero-20261012-v3.webp", coverPosition: "72% center" },
-  { slug: "soni", name: "SoulChat AI", service: "海外虚拟社交产品体验设计", year: "2026", tone: "tone-b", href: "/cases/soulchat/index.html#cover", cover: "/work-covers/soulchat-real-screen-20261013.png", coverPosition: "center" },
-  { slug: "pine-valley", name: "中国时空", service: "北斗主题企业数字人设计", year: "2026", tone: "tone-c", href: "/cases/csti/index.html", cover: "/cases/csti/assets/hero.jpg", coverPosition: "82% center" },
-  { slug: "kyrosai", name: "换装工作流", service: "人物换装 · 工作流设计", year: "2026", tone: "tone-d", href: "/cases/outfit/index.html#top", cover: "/cases/outfit/assets/95fa758add32791e13ff12768327c910dc89d78c.png", coverPosition: "center 40%" },
-  { slug: "delane", name: "其他设计", service: "视觉设计 · IP 形象", year: "2026", tone: "tone-e", href: "/cases/other-design/index.html", cover: "/work-covers/other-design-ip.png", coverPosition: "center" },
+  { slug: "lovel", name: "一拍入画", service: "运营活动设计", year: "2026", tone: "tone-a", href: "/cases/yipai/index.html?revision=20261012-kv3#cover", cover: "/work-covers/card-lovel.webp", coverPosition: "72% center" },
+  { slug: "soni", name: "SoulChat AI", service: "海外虚拟社交产品体验设计", year: "2026", tone: "tone-b", href: "/cases/soulchat/index.html#cover", cover: "/work-covers/card-soni.webp", coverPosition: "center" },
+  { slug: "pine-valley", name: "中国时空", service: "北斗主题企业数字人设计", year: "2026", tone: "tone-c", href: "/cases/csti/index.html", cover: "/work-covers/card-pine-valley.webp", coverPosition: "82% center" },
+  { slug: "kyrosai", name: "换装工作流", service: "人物换装 · 工作流设计", year: "2026", tone: "tone-d", href: "/cases/outfit/index.html#top", cover: "/work-covers/card-kyrosai.webp", coverPosition: "center 40%" },
+  { slug: "delane", name: "其他设计", service: "视觉设计 · IP 形象", year: "2026", tone: "tone-e", href: "/cases/other-design/index.html", cover: "/work-covers/card-delane.webp", coverPosition: "center" },
 ];
 
 function BlurText({ children, by = "letters", delay = 0 }) {
