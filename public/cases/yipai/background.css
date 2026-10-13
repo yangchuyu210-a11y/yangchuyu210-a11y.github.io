@@ -1,0 +1,98 @@
+/* Chapter 02: follow the supplied layout, with the campaign's own photo theme. */
+#background {
+  padding: 30px 48px 28px;
+  overflow: hidden;
+  color: #202329;
+  background: radial-gradient(ellipse at 100% 6%, #edf8ff 0, transparent 37%), radial-gradient(ellipse at 0 90%, #f2f7ff 0, transparent 30%), #fff;
+}
+#background .page-meta { margin-bottom: 48px; color: #3b434b; font-size: 11px; line-height: 1.4; }
+#background .page-meta > span:first-child { display: flex; align-items: center; gap: 7px; font-weight: 700; }
+#background .page-meta > span:first-child::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+#background .page-meta em { color: #2d88b6; }
+#background .section-heading { align-items: baseline; gap: 0 4px; margin-bottom: 46px; }
+#background .section-heading h2 { font-family: CoverDisplay, 'Microsoft YaHei', sans-serif; font-size: clamp(34px, 3.7vw, 46px); line-height: 1.25; letter-spacing: -.5px; -webkit-text-stroke: 0; }
+#background .section-heading h2 > span { color: #2d88b6; }
+@supports (background-clip: text) {
+  #background .section-heading h2 > span { background: linear-gradient(180deg, #2ba0d4 5%, #2379a4 35%, #15384f 69%, #192329 100%); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+}
+#background .handwritten { color: #4399bd; font-family: CoverScript, cursive; font-size: 31px; line-height: 1; opacity: 1; transform: rotate(-4deg) translate(-9px, 6px); }
+#background .background-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 18px; }
+#background .background-card, #background .problem-card { min-height: 280px; padding: 29px 28px; border-radius: 25px; }
+#background h3 { font-family: CoverDisplay, 'Microsoft YaHei', sans-serif; font-size: 24px; font-weight: 400; line-height: 1.35; }
+#background .mini-script { color: #51a5c9; font-family: CoverScript, cursive; font-size: 19px; font-weight: 400; line-height: 1; transform: rotate(-4deg) translate(-4px, 2px); margin-left: 4px; }
+#background .background-card { background: linear-gradient(125deg, #172f53, #284f7a); color: #fff; }
+#background .background-copy { position: relative; z-index: 2; width: 67%; }
+#background .background-copy .mini-script { color: #9ecfe8; }
+#background .background-copy p { margin-top: 15px; color: #e6eff8; font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 14px; line-height: 1.9; }
+#background .background-product { position: absolute; right: 4px; bottom: 0; width: 160px; height: 265px; }
+#background .background-product::before { content: ''; position: absolute; z-index: 0; right: -12px; bottom: 18px; width: 169px; height: 15px; border-radius: 50%; background: #789ab9; box-shadow: inset 0 1px 1px #b9d8ec80; }
+#background .background-product::after { content: ''; position: absolute; z-index: 0; right: -12px; bottom: 0; width: 169px; height: 25px; border-radius: 0 0 9px 9px; background: linear-gradient(90deg, #385f83, #6388aa 46%, #315577); }
+#background .mini-phone { position: absolute; z-index: 1; right: 17px; bottom: 27px; width: 125px; height: 239px; border: 4px solid #203953; border-radius: 19px; background: #64c7e8; box-shadow: 0 0 0 1px #93b9d5, 0 5px 6px #0d203e60, -5px 3px 12px #0d203e30; transform: none; }
+#background .mini-phone img { width: 100%; height: auto; display: block; }
+#background .problem-card { overflow: visible; background: linear-gradient(110deg, #edf8ff, #e2f3fe); }
+#background .problem-copy { position: relative; z-index: 2; width: 67%; }
+#background .problem-copy p { margin-top: 15px; color: #4b5d6d; font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 14px; line-height: 1.9; }
+#background .problem-copy p + p { margin-top: 10px; }
+#background .problem-copy strong { font-weight: 600; color: #284f69; }
+#background .problem-art { position: absolute; inset: auto -7% -6px auto; width: 44%; max-width: 250px; background: none; mask-image: none; pointer-events: none; }
+#background .problem-art img { display: block; width: 100%; height: auto; }
+#background .problem-direction { position: absolute; top: -23px; right: 43px; z-index: 3; display: grid; place-items: center; width: 54px; height: 54px; border: 7px solid #f7fcff; border-radius: 50%; color: #2d88b6; background: linear-gradient(145deg, #b9e4fa, #e1f3ff); }
+#background .problem-direction svg { width: 27px; height: 27px; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+#background .business-card { position: relative; display: block; margin-top: 17px; padding: 23px 28px; border-radius: 23px; overflow: hidden; background: linear-gradient(105deg, #eaf7fd, #f8fcff 59%, #fff7df); }
+#background .business-copy { padding-right: 115px; }
+#background .business-card p { max-width: none; margin-top: 10px; color: #4b606d; font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 14px; line-height: 1.9; }
+#background .business-card strong { font-weight: 600; color: #2b7499; }
+#background .business-symbol { position: absolute; right: 23px; bottom: 9px; width: 90px; height: 90px; object-fit: contain; }
+#background .page-footer { margin-top: 36px; color: #647783; font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 11px; line-height: 1.5; }
+#background .page-footer > span:first-child { color: #313e49; font-weight: 700; }
+@media (max-width: 1000px) {
+  #background { padding: 28px 32px 25px; }
+  #background .page-meta { margin-bottom: 42px; }
+  #background .section-heading { margin-bottom: 40px; }
+  #background .section-heading h2 { font-size: 36px; }
+  #background .handwritten { font-size: 27px; }
+  #background .background-grid { gap: 15px; }
+  #background .background-card, #background .problem-card { padding: 25px 23px; }
+  #background h3 { font-size: 22px; }
+  #background .mini-script { font-size: 17px; }
+  #background .background-copy p, #background .problem-copy p { font-size: 13px; }
+  #background .background-product { right: -10px; width: 120px; height: 245px; }
+  #background .mini-phone { right: 19px; width: 99px; height: 219px; }
+  #background .background-product::after { width: 139px; right: -4px; }
+  #background .background-product::before { width: 139px; right: -4px; }
+  #background .business-card { padding: 22px 25px; }
+}
+@media (max-width: 720px) {
+  #background { padding: 25px 23px 23px; }
+  #background .page-meta { font-size: 10px; margin-bottom: 31px; }
+  #background .section-heading { gap: 4px; margin-bottom: 33px; }
+  #background .section-heading h2 { font-size: 31px; letter-spacing: 0; }
+  #background .handwritten { font-size: 25px; margin-left: 0; transform: rotate(-4deg) translate(-4px, 4px); }
+  #background .background-grid { grid-template-columns: 1fr; gap: 25px; }
+  #background .background-card, #background .problem-card { min-height: 0; padding: 24px; border-radius: 22px; }
+  #background .background-copy, #background .problem-copy { width: 100%; padding-bottom: 178px; }
+  #background .background-copy p, #background .problem-copy p { font-size: 14px; }
+  #background .background-product { right: 22px; width: 136px; height: 178px; }
+  #background .mini-phone { right: 19px; width: 86px; height: 157px; bottom: 27px; border-radius: 15px; }
+  #background .background-product::before { right: -6px; width: 137px; }
+  #background .background-product::after { right: -6px; width: 137px; }
+  #background .problem-art { right: 6px; bottom: 4px; width: 170px; }
+  #background .problem-direction { right: 24px; top: -20px; width: 47px; height: 47px; border-width: 6px; }
+  #background .problem-direction svg { width: 23px; height: 23px; }
+  #background .business-card { padding: 23px; margin-top: 18px; }
+  #background .business-copy { padding-right: 0; padding-bottom: 65px; }
+  #background .business-card p { font-size: 14px; }
+  #background .business-symbol { right: 18px; bottom: 8px; width: 70px; height: 70px; }
+  #background .page-footer { font-size: 10px; margin-top: 27px; align-items: flex-end; gap: 18px; }
+  #background .page-footer > span:last-child { max-width: 60%; }
+}
+@media (max-width: 370px) {
+  #background { padding-right: 20px; padding-left: 20px; }
+  #background .page-meta { font-size: 9px; }
+  #background .section-heading h2 { font-size: 28px; }
+  #background .handwritten { font-size: 23px; }
+}
+@media print {
+  #background { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #background .section-heading h2 > span { color: #2d88b6; background: none; -webkit-text-fill-color: currentColor; }
+}

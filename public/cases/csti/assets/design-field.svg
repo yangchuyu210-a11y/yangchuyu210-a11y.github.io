@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1040" viewBox="0 0 1440 1040" fill="none">
+<defs><pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M80 0H0V80" stroke="#81afe0" stroke-opacity=".035"/></pattern><radialGradient id="fade"><stop stop-color="white"/><stop offset="1" stop-color="black"/></radialGradient><mask id="edge"><rect width="1440" height="1040" fill="white"/><ellipse cx="550" cy="540" rx="570" ry="500" fill="url(#fade)"/></mask></defs>
+<rect width="1440" height="1040" fill="url(#grid)" mask="url(#edge)"/>
+<g stroke="#7da9db" stroke-opacity=".13"><ellipse cx="1260" cy="460" rx="610" ry="185" transform="rotate(-30 1260 460)"/><ellipse cx="1260" cy="460" rx="667" ry="222" transform="rotate(-30 1260 460)" stroke-opacity=".055"/><ellipse cx="1260" cy="460" rx="717" ry="265" transform="rotate(-30 1260 460)" stroke-opacity=".045" stroke-dasharray="2 12"/><path d="M32 95V945M1408 95V945" stroke-opacity=".075" stroke-dasharray="1 9"/></g>
+<g stroke="#a1c4ef" stroke-opacity=".22"><path d="M26 144h12m-6-6v12M1402 144h12m-6-6v12M26 864h12m-6-6v12M1402 864h12m-6-6v12"/></g>
+<g fill="#9fc7f6" fill-opacity=".32"><circle cx="912" cy="445" r="2"/><circle cx="1086" cy="700" r="2"/><circle cx="1340" cy="195" r="2"/></g><g stroke="#9fc7f6" stroke-opacity=".12"><circle cx="912" cy="445" r="7"/><circle cx="1086" cy="700" r="7"/></g>
+</svg>
