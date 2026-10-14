@@ -10,11 +10,11 @@ import {
 } from "react-router-dom";
 
 const projects = [
-  { slug: "lovel", name: "一拍入画", service: "运营活动设计", year: "2026", tone: "tone-a", href: "/cases/yipai/index.html?revision=20261012-kv3#cover", cover: "/cases/yipai/assets/campaign-hero-20261012-v3.webp", coverPosition: "72% center" },
-  { slug: "soni", name: "SoulChat AI", service: "海外虚拟社交产品体验设计", year: "2026", tone: "tone-b", href: "/cases/soulchat/index.html#cover", cover: "/work-covers/card-soni.webp", coverPosition: "center" },
-  { slug: "pine-valley", name: "中国时空", service: "北斗主题企业数字人设计", year: "2026", tone: "tone-c", href: "/cases/csti/index.html", cover: "/cases/csti/assets/hero.jpg", coverPosition: "82% center" },
-  { slug: "kyrosai", name: "换装工作流", service: "人物换装 · 工作流设计", year: "2026", tone: "tone-d", href: "/cases/outfit/index.html#top", cover: "/work-covers/card-kyrosai.webp", coverPosition: "center 40%" },
-  { slug: "delane", name: "其他设计", service: "视觉设计 · IP 形象", year: "2026", tone: "tone-e", href: "/cases/other-design/index.html", cover: "/work-covers/card-delane.webp", coverPosition: "center" },
+  { slug: "lovel", name: "一拍入画", service: "运营活动设计", year: "2026", tone: "tone-a", href: "/cases/yipai/index.html?revision=20261012-kv3#cover", cover: "/cases/yipai/assets/campaign-hero-20261012-v3.webp", coverSet: "/cases/yipai/assets/campaign-hero-20261012-v3-480w.webp 480w, /cases/yipai/assets/campaign-hero-20261012-v3.webp 1672w", coverPosition: "72% center" },
+  { slug: "soni", name: "SoulChat AI", service: "海外虚拟社交产品体验设计", year: "2026", tone: "tone-b", href: "/cases/soulchat/index.html#cover", cover: "/work-covers/card-soni.webp", coverSet: "/work-covers/card-soni-480w.webp 480w, /work-covers/card-soni-960w.webp 960w, /work-covers/card-soni.webp 1086w", coverPosition: "center" },
+  { slug: "pine-valley", name: "中国时空", service: "北斗主题企业数字人设计", year: "2026", tone: "tone-c", href: "/cases/csti/index.html", cover: "/cases/csti/assets/hero.jpg", coverSet: "/cases/csti/assets/hero-480w.webp 480w, /cases/csti/assets/hero-960w.webp 960w, /cases/csti/assets/hero.jpg 2048w", coverPosition: "82% center" },
+  { slug: "kyrosai", name: "换装工作流", service: "人物换装 · 工作流设计", year: "2026", tone: "tone-d", href: "/cases/outfit/index.html#top", cover: "/work-covers/card-kyrosai.webp", coverSet: "/work-covers/card-kyrosai-480w.webp 480w, /work-covers/card-kyrosai.webp 768w", coverPosition: "center 40%" },
+  { slug: "delane", name: "其他设计", service: "视觉设计 · IP 形象", year: "2026", tone: "tone-e", href: "/cases/other-design/index.html", cover: "/work-covers/card-delane.webp", coverSet: "/work-covers/card-delane-480w.webp 480w, /work-covers/card-delane-960w.webp 960w, /work-covers/card-delane.webp 1350w", coverPosition: "center" },
 ];
 
 function BlurText({ children, by = "letters", delay = 0 }) {
@@ -220,7 +220,10 @@ function Header({ page }) {
     { label: "Contact", to: "/contact", active: page.pathname === "/contact" },
   ];
   return <header className={`site-header frame${page.pathname === "/" ? " site-header-home" : ""}${scrolled ? " is-scrolled" : ""}`}>
-    <Link className="brand link-line name-eyes-trigger" to="/yangchuyu" aria-label="YANGCHUYU · 查看简历"><BlurText>YANGCHUYU</BlurText><span className="name-eyes" aria-hidden="true"><img src="/brand/curious-eyes.webp" alt="" width="44" height="32" decoding="async" /></span></Link>
+    <div className="header-identity">
+      <Link className="brand link-line name-eyes-trigger" to="/yangchuyu" aria-label="YANGCHUYU · 查看简历"><BlurText>YANGCHUYU</BlurText><span className="name-eyes" aria-hidden="true"><img src="/brand/curious-eyes.webp" alt="" width="44" height="32" decoding="async" /></span></Link>
+      {page.pathname === "/" && !scrolled && <p className="hero-identity">AI视觉设计</p>}
+    </div>
     <nav aria-label="Primary navigation">
       {links.map((link, index) => <Link key={link.label} className={`nav-link${link.active ? " active" : ""}`} to={link.to} onClick={event => {
         if (page.pathname === link.to) {
@@ -381,7 +384,7 @@ function ProjectCollection({ projectImages, intro = false }) {
             state={project.href ? undefined : { from: location.pathname === "/" ? "/#work" : "/work", backgroundLocation: location }}
             tabIndex={copy ? -1 : undefined} aria-label={"查看 " + project.name + " 作品"}>
             <div className="gallery-project-image">
-              <img src={project.cover || projectImages[project.slug] || `/work-placeholders/${project.slug}.jpg`} style={{ objectPosition: project.coverPosition }} loading={copy ? "lazy" : "eager"} fetchPriority={intro ? "low" : "auto"} decoding="async" alt={project.name + " project cover"} />
+              <img src={project.cover || projectImages[project.slug] || `/work-placeholders/${project.slug}.jpg`} srcSet={projectImages[project.slug] ? undefined : project.coverSet} sizes={project.slug === 'lovel' || project.slug === 'pine-valley' ? '(max-width: 600px) 450px, (max-width: 1620px) 50vw, 810px' : '(max-width: 600px) 190px, (max-width: 1620px) 21vw, 340px'} style={{ objectPosition: project.coverPosition }} loading={copy ? "lazy" : "eager"} decoding="async" alt={project.name + " project cover"} />
               <span className="gallery-open" aria-hidden="true">↗</span>
             </div>
             <div className="gallery-project-caption"><strong><BlurText>{project.name}</BlurText></strong><span><BlurText by="words" delay={90}>{project.service}</BlurText></span></div>
@@ -451,7 +454,7 @@ function HeroPortal() {
 
     const context = canvas.getContext("2d");
     const butterfly = new Image();
-    butterfly.src = "/assets/butterfly-3d.webp";
+    butterfly.src = "/assets/butterfly-3d-256w.webp";
     const particleArt = ['/assets/particle-spark.png', '/assets/particle-star.png'].map(src => {
       const image = new Image();
       image.src = src;
@@ -620,7 +623,7 @@ function HeroPortal() {
     <section ref={heroRef} className="reference-hero hero-video-cover" aria-label="视频作品集封面，蝴蝶跟随鼠标">
       <h1 className="visually-hidden">杨初雨的 AI 视觉设计作品集</h1>
       <video ref={videoRef} className="hero-video-static" src="/hero-loop-web-20261013.mp4" poster="/hero-poster.jpg" autoPlay muted loop playsInline preload="auto" />
-      <p className="hero-identity">AI视觉设计</p>
+      <p className="hero-identity-mobile">AI视觉设计</p>
       <canvas ref={effectsRef} className="hero-effects-canvas" aria-hidden="true" />
     </section>
   );
@@ -783,7 +786,7 @@ function ProfilePage() {
                       <img src="/profile-card-back.webp" alt="" />
                     </span>
                     <span className="profile-photo-card-face profile-photo-card-front">
-                      <img src={photoSrc} srcSet={photoSrc === '/profile-photo.jpg' ? '/profile-photo-display.webp 1280w, /profile-photo.jpg 3584w' : undefined} sizes="(max-width: 800px) 250px, 390px" alt="个人照片" decoding="async" />
+                      <img src={photoSrc} srcSet={photoSrc === '/profile-photo.jpg' ? '/profile-photo-display-800w.webp 800w, /profile-photo-display.webp 1280w, /profile-photo.jpg 3584w' : undefined} sizes="(max-width: 800px) 250px, 390px" alt="个人照片" decoding="async" />
                     </span>
                   </span>
                 </button>
@@ -1058,9 +1061,9 @@ function EndingAnimation() {
 }
 
 const showcaseVideos = [
-  { src: "/video-01.mp4", preview: "/video-01-preview-20261013.mp4", poster: "/video-01-poster.jpg", duration: "00:50", title: "AI character study", description: "角色、场景与镜头节奏的动态视觉实验。" },
-  { src: "/video-02.mp4", preview: "/video-02-preview-20261013.mp4", poster: "/video-02-poster.jpg", duration: "01:04", title: "Digital human", description: "数字人内容与品牌表达的动态设计。" },
-  { src: "/video-03.mp4", preview: "/video-03-preview-20261013.mp4", poster: "/video-03-poster.jpg", duration: "01:09", title: "Festival campaign", description: "节日氛围、角色表演与短片剪辑。" },
+  { src: "/video-01.mp4", preview: "/video-01-preview-20261014.mp4", poster: "/video-01-poster.jpg", duration: "00:50", title: "AI character study", description: "角色、场景与镜头节奏的动态视觉实验。" },
+  { src: "/video-02.mp4", preview: "/video-02-preview-20261014.mp4", poster: "/video-02-poster.jpg", duration: "01:04", title: "Digital human", description: "数字人内容与品牌表达的动态设计。" },
+  { src: "/video-03.mp4", preview: "/video-03-preview-20261014.mp4", poster: "/video-03-poster.jpg", duration: "01:09", title: "Festival campaign", description: "节日氛围、角色表演与短片剪辑。" },
 ];
 
 function VideoShowcase() {
@@ -1069,7 +1072,6 @@ function VideoShowcase() {
   const dialogRef = useRef(null);
   const visibleVideos = useRef(new Set());
   const closeTimer = useRef(null);
-  const playbackState = useRef({ time: 0, wasPlaying: true });
   const [activeVideo, setActiveVideo] = useState(null);
   const [previewVideo, setPreviewVideo] = useState(1);
   const [isClosing, setIsClosing] = useState(false);
@@ -1106,24 +1108,10 @@ function VideoShowcase() {
   useEffect(() => {
     if (activeVideo === null) return;
     const dialog = dialogRef.current;
-    const video = expandedVideo.current;
-    if (!dialog || !video) return;
-
     if (!dialog.open) dialog.showModal();
-    const continuePlayback = () => {
-      video.currentTime = playbackState.current.time;
-      if (playbackState.current.wasPlaying) video.play().catch(() => {});
-    };
-    if (video.readyState >= 1) continuePlayback();
-    else video.addEventListener("loadedmetadata", continuePlayback, { once: true });
   }, [activeVideo]);
 
   const openVideo = (index) => {
-    const source = inlineVideos.current[index];
-    playbackState.current = {
-      time: source?.currentTime || 0,
-      wasPlaying: true,
-    };
     inlineVideos.current.forEach((video) => video?.pause());
     setActiveVideo(index);
   };
@@ -1132,17 +1120,11 @@ function VideoShowcase() {
     if (activeVideo === null || isClosing) return;
     const modalVideo = expandedVideo.current;
     if (modalVideo) {
-      playbackState.current.time = modalVideo.currentTime;
-      playbackState.current.wasPlaying = !modalVideo.paused;
       modalVideo.pause();
     }
     setIsClosing(true);
     closeTimer.current = window.setTimeout(() => {
       dialogRef.current?.close();
-      const source = inlineVideos.current[activeVideo];
-      if (source) {
-        source.currentTime = Number.isFinite(source.duration) && source.duration > 0 ? playbackState.current.time % source.duration : 0;
-      }
       setActiveVideo(null);
       setIsClosing(false);
     }, 220);
@@ -1167,7 +1149,8 @@ function VideoShowcase() {
             onPointerEnter={event => { if (event.pointerType === 'mouse' && window.matchMedia('(hover: hover) and (pointer: fine)').matches) setPreviewVideo(index); }}
             onFocus={() => setPreviewVideo(index)} onBlur={() => setPreviewVideo(1)}
             onClick={() => openVideo(index)} aria-label={"放大播放视频 " + (index + 1)}>
-            <video ref={node => { inlineVideos.current[index] = node; }} src={video.preview} poster={video.poster} muted loop playsInline preload="none" />
+            <video ref={node => { inlineVideos.current[index] = node; }} src={video.preview} onLoadedData={event => event.currentTarget.classList.add('has-preview')} muted loop playsInline preload="none" />
+            <img className="video-tile-poster" src={video.poster} alt="" loading="lazy" decoding="async" />
             <span className="video-tile-title"><strong><BlurText by="words">{video.title}</BlurText></strong><span><BlurText delay={90}>{video.duration}</BlurText></span></span>
             <span className="video-tile-play" aria-hidden="true">↗</span>
           </button>
