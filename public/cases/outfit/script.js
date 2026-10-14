@@ -48,12 +48,48 @@ wireTabs('[data-prompt]', (index, tab) => {
 });
 
 const slider = document.querySelector('#compare-slider');
+const comparison = slider.closest('.comparison');
+const compareImages = [...comparison.querySelectorAll('img')];
+const compareMotion = matchMedia('(prefers-reduced-motion:reduce)');
+let compareVisible = false, compareDemoDone = false;
+let compareAnimations = [];
+function stopCompareDemo() {
+  compareDemoDone = true;
+  compareAnimations.forEach(animation => animation.cancel());
+}
+function showCompareDemo() {
+  if (compareDemoDone || !compareVisible || compareMotion.matches || !compareImages.every(img => img.complete && img.naturalWidth)) return;
+  compareDemoDone = true;
+  const width = comparison.getBoundingClientRect().width;
+  const timing = {duration:1400,easing:'cubic-bezier(.77,0,.175,1)'};
+  compareAnimations = [
+    comparison.querySelector('.comparison-before').animate([
+      {clipPath:'inset(0 50% 0 0)'}, {clipPath:'inset(0 24% 0 0)'},
+      {clipPath:'inset(0 72% 0 0)'}, {clipPath:'inset(0 50% 0 0)'}
+    ], timing),
+    comparison.querySelector('.comparison-handle').animate([
+      {transform:'translateX(-50%)'}, {transform:`translateX(calc(-50% + ${width * .26}px))`},
+      {transform:`translateX(calc(-50% - ${width * .22}px))`}, {transform:'translateX(-50%)'}
+    ], timing)
+  ];
+}
+const compareObserver = new IntersectionObserver(([entry]) => {
+  compareVisible = entry.isIntersecting;
+  if (compareVisible) showCompareDemo();
+  else if (compareDemoDone) stopCompareDemo();
+}, {threshold:.35});
+compareObserver.observe(comparison);
+compareImages.forEach(img => img.addEventListener('load', showCompareDemo, {once:true}));
+comparison.addEventListener('pointerdown', stopCompareDemo);
+slider.addEventListener('keydown', stopCompareDemo);
+slider.addEventListener('input', stopCompareDemo);
+compareMotion.addEventListener('change', event => { if (event.matches) stopCompareDemo(); });
 function updateComparison() {
   slider.closest('.comparison').style.setProperty('--split', `${slider.value}%`);
   slider.setAttribute('aria-valuetext', `原图显示 ${slider.value}%`);
 }
 slider.addEventListener('input', updateComparison);
-document.querySelector('#compare-reset').addEventListener('click', () => { slider.value = 50; updateComparison(); });
+document.querySelector('#compare-reset').addEventListener('click', () => { stopCompareDemo(); slider.value = 50; updateComparison(); });
 
 let toastTimer;
 function showToast(message) {

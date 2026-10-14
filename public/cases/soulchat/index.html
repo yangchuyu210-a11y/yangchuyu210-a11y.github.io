@@ -259,6 +259,7 @@ body{background:var(--page-backdrop)}
 .site-footer{background:var(--case-canvas)}
 @media print{body{background:var(--case-canvas)}#main{max-width:none}}
 
+.triple-stage .account-state button[aria-pressed=true]{border-color:var(--pink)}
 </style>
 <link rel="stylesheet" href="../case-return.css">
 </head>
@@ -321,7 +322,8 @@ document.querySelectorAll('.menu-panel a').forEach(a=>a.addEventListener('click'
 document.querySelectorAll('[data-insight]').forEach(b=>b.onclick=()=>{pressed('[data-insight]',b);document.querySelectorAll('[data-solution]').forEach(x=>x.classList.toggle('active',x.dataset.solution===b.dataset.insight))});
 document.querySelectorAll('[data-reference-app]').forEach(b=>b.onclick=()=>{pressed('[data-reference-app]',b);document.querySelectorAll('[data-study]').forEach(x=>{const chosen=b.dataset.referenceApp==='all'||x.dataset.study===b.dataset.referenceApp;x.classList.toggle('subdued',!chosen);x.classList.toggle('focused',chosen&&b.dataset.referenceApp!=='all')})});
 const accountTexts={profile:'未开通状态突出会员入口与价值说明，方便用户发现权益。',paid:'已开通状态展示有效期与赠送点数，将当前权益清楚呈现。',subscription:'从会员入口进入方案页，先理解权益，再比较周期与价格。'};
-document.querySelectorAll('[data-profile]').forEach(b=>b.onclick=()=>{pressed('[data-profile]',b);document.querySelectorAll('.account-state').forEach(f=>f.classList.toggle('active',f.querySelector('button').dataset.key===b.dataset.profile));document.querySelector('#profile-explanation').textContent=accountTexts[b.dataset.profile]});
+document.querySelectorAll('.account-state button').forEach(b=>{b.classList.remove('zoom');b.dataset.profile=b.dataset.key;b.setAttribute('aria-label','选择'+b.dataset.title);b.setAttribute('aria-pressed',String(b.closest('.account-state').classList.contains('active')))});
+document.querySelectorAll('[data-profile]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-profile]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.profile===b.dataset.profile)));document.querySelectorAll('.account-state').forEach(f=>f.classList.toggle('active',f.querySelector('button').dataset.key===b.dataset.profile));document.querySelector('#profile-explanation').textContent=accountTexts[b.dataset.profile]});
 document.querySelectorAll('[data-purchase]').forEach(b=>b.onclick=()=>{pressed('[data-purchase]',b);document.querySelectorAll('[data-purchase]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.purchase-art .region-frame').forEach(r=>r.classList.toggle('highlighted',Number(r.dataset.number)===Number(b.dataset.purchase)+1))});
 document.querySelectorAll('.purchase-art .region-frame[data-number="1"]').forEach(r=>r.classList.add('highlighted'));
 const plans=[['4,500','$9.99'],['45,000','$99.99'],['90,000','$199.99']];document.querySelectorAll('[data-plan]').forEach(b=>b.onclick=()=>{pressed('[data-plan]',b);const p=plans[+b.dataset.plan];document.querySelector('#selection-current').textContent=p[0]+' 点数';document.querySelector('#plan-result').textContent='已选 '+p[0]+' 点数 / '+p[1]+' · 仅用于展示选中状态'});
