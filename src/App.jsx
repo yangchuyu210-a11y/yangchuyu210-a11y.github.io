@@ -375,6 +375,7 @@ function ProjectCollection({ projectImages, intro = false }) {
         <div className="carousel-heading">
           <h2><BlurText>Selected work</BlurText></h2>
           <SectionMark type="folder" />
+          <p className="section-subtitle"><BlurText delay={120}>精选作品</BlurText></p>
         </div>
       </div>
       <LoopGallery label="作品" hold={Boolean(location.state?.backgroundLocation)}>
@@ -623,7 +624,6 @@ function HeroPortal() {
     <section ref={heroRef} className="reference-hero hero-video-cover" aria-label="视频作品集封面，蝴蝶跟随鼠标">
       <h1 className="visually-hidden">杨初雨的 AI 视觉设计作品集</h1>
       <video ref={videoRef} className="hero-video-static" src="/hero-loop-web-20261013.mp4" poster="/hero-poster.jpg" autoPlay muted loop playsInline preload="auto" />
-      <p className="hero-identity-mobile">AI视觉设计</p>
       <canvas ref={effectsRef} className="hero-effects-canvas" aria-hidden="true" />
     </section>
   );
@@ -934,7 +934,7 @@ function PersonalStrengths() {
     event.currentTarget.style.transform = `perspective(900px) rotateX(${-y * 8}deg) rotateY(${x * 10}deg) scale(1.015)`;
   };
   return <section className="strengths-section frame" aria-labelledby="strengths-title">
-    <div className="strengths-heading"><h2 id="strengths-title"><BlurText>Advantages</BlurText></h2><SectionMark type="plane" /></div>
+    <div className="strengths-heading"><h2 id="strengths-title"><BlurText>Advantages</BlurText></h2><SectionMark type="plane" /><p className="section-subtitle"><BlurText delay={120}>个人优势</BlurText></p></div>
     <div className="strengths-grid">
       {strengths.map((strength, index) => <article className="strength-card" style={{ '--strength-tint': strength.tint }} key={strength.title[0]} tabIndex={0} data-reveal-item onPointerMove={tilt} onPointerLeave={event => event.currentTarget.style.removeProperty('transform')}>
         <span className="strength-number"><BlurText delay={index * 60}>{String(index + 1).padStart(2, '0')}</BlurText></span>
@@ -1137,6 +1137,7 @@ function VideoShowcase() {
         <header className="video-showcase-heading">
           <h2><BlurText>Video</BlurText></h2>
           <SectionMark type="video" />
+          <p className="section-subtitle"><BlurText delay={120}>视频作品</BlurText></p>
         </header>
       <div className="video-composition-body">
       <div className="video-intro" data-reveal-item>

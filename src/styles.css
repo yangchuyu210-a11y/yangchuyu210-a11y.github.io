@@ -1296,7 +1296,7 @@ body { font-family: var(--body); background: var(--surface); }
   .home-story { height: auto; }
   .home-story-stage { position: relative; height: auto; }
   .home-story .reference-hero { position: relative; inset: auto; height: auto; aspect-ratio: 1672 / 941; margin-top: 32px; }
-  .project-section-intro { position: relative; padding-top: 44px; }
+  .project-section-intro { position: relative; padding-top: 20px; }
   .site-header, .site-header-home { width: calc(100% - 32px); }
   .site-header nav { gap: 12px; }
   .site-header .brand { font-size: 10px; letter-spacing: .01em; }
@@ -1336,7 +1336,6 @@ body { font-family: var(--body); background: var(--surface); }
   .site-header-home:not(.is-scrolled) .brand:hover .resume-hint { background: rgb(255 255 255 / .28); }
 }
 .hero-identity { margin: 0; font-size: 12px; font-weight: 500; line-height: 1.5; letter-spacing: .025em; white-space: nowrap; }
-.hero-identity-mobile { display: none; }
 .site-header { column-gap: 20px; }
 @media (max-width: 900px) {
   .header-identity { gap: 58px; }
@@ -1345,7 +1344,6 @@ body { font-family: var(--body); background: var(--surface); }
 @media (max-width: 600px) {
   .hero-identity { display: none; }
   .home-story .reference-hero { overflow: visible; }
-  .hero-identity-mobile { display: block; position: absolute; top: calc(100% + 14px); left: var(--pad); right: var(--pad); margin: 0; color: var(--muted); font-size: 11px; text-align: center; }
   .name-eyes { left: 0; top: 100%; }
   .resume-hint { margin-left: 6px; padding: 3px 5px; }
   .site-header { column-gap: 12px; }
@@ -1381,6 +1379,8 @@ body { font-family: var(--body); background: var(--surface); }
 .ending-title .section-mark,
 .contact-title-row .section-mark { width: var(--title-mark-size); }
 .section-mark-heart img { transform: scale(1.1); }
+.carousel-heading, .video-showcase-heading, .strengths-heading { display: grid; grid-template-columns: max-content max-content; row-gap: 12px; }
+.carousel-heading .section-subtitle, .video-showcase-heading .section-subtitle, .strengths-heading .section-subtitle { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: clamp(12px, 1.2vw, 14px); line-height: 1.5; letter-spacing: .12em; text-align: center; }
 @media (max-width: 600px) {
   :root { --title-mark-size: 36px; }
 }
