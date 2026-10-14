@@ -1329,6 +1329,12 @@ body { font-family: var(--body); background: var(--surface); }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .header-identity { display: flex; align-items: center; gap: 64px; min-width: 0; }
 .header-identity .brand { flex-shrink: 0; white-space: nowrap; }
+.resume-hint { display: inline-flex; align-items: center; gap: 3px; margin-left: 8px; padding: 4px 6px; border: 1px solid rgb(120 84 174 / .25); border-radius: 999px; background: rgb(170 142 225 / .1); font-family: var(--body); font-size: 10px; font-weight: 500; line-height: 1.2; letter-spacing: 0; transition: background-color 180ms ease; }
+.brand:hover .resume-hint, .brand:focus-visible .resume-hint { background: rgb(170 142 225 / .22); }
+@media (min-width: 601px) {
+  .site-header-home:not(.is-scrolled) .resume-hint { border-color: rgb(255 255 255 / .55); background: rgb(255 255 255 / .14); }
+  .site-header-home:not(.is-scrolled) .brand:hover .resume-hint { background: rgb(255 255 255 / .28); }
+}
 .hero-identity { margin: 0; font-size: 12px; font-weight: 500; line-height: 1.5; letter-spacing: .025em; white-space: nowrap; }
 .hero-identity-mobile { display: none; }
 .site-header { column-gap: 20px; }
@@ -1341,6 +1347,15 @@ body { font-family: var(--body); background: var(--surface); }
   .home-story .reference-hero { overflow: visible; }
   .hero-identity-mobile { display: block; position: absolute; top: calc(100% + 14px); left: var(--pad); right: var(--pad); margin: 0; color: var(--muted); font-size: 11px; text-align: center; }
   .name-eyes { left: 0; top: 100%; }
+  .resume-hint { margin-left: 6px; padding: 3px 5px; }
+  .site-header { column-gap: 12px; }
+  .site-header nav { gap: 8px; }
+}
+@media (max-width: 360px) {
+  .site-header { width: calc(100% - 8px); column-gap: 8px; }
+  .site-header nav { gap: 6px; }
+  .site-header .nav-link { font-size: 10px; }
+  .resume-hint { margin-left: 4px; padding-inline: 4px; }
 }
 /* Let the soft tint emerge gradually from the work section's paper background. */
 .portfolio-outro { background: linear-gradient(to bottom, #fbfaf8, rgb(251 250 248 / 0) 200px), radial-gradient(ellipse at 12% 22%, rgb(170 142 225 / .06), transparent 48%), radial-gradient(ellipse at 90% 65%, rgb(250 225 161 / .09), transparent 45%); }

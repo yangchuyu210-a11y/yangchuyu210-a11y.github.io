@@ -35,7 +35,7 @@ function openVideo(key,title,event){
   mediaError.hidden=true;
   dialogTitle.textContent=title;
   dialogVideo.poster=`assets/${key==='ambient'?'hero':key}.jpg`;
-  dialogVideo.src=`assets/${key}.mp4`;
+  dialogVideo.src=`assets/${key}.mp4?v=20261014`;
   dialogVideo.load();
   showMedia(event);
   dialogVideo.play().catch(()=>{});
@@ -59,7 +59,6 @@ document.querySelectorAll('[data-video]').forEach(button=>{
   });
   button.addEventListener('mouseleave',()=>{
     preview.pause();
-    preview.load();
     if(activePreview===preview)activePreview=null;
   });
 });
@@ -145,7 +144,7 @@ function selectGesture(choice,event){
   document.querySelector('#stage-counter').textContent=`${String(gestureChoices.indexOf(choice)+1).padStart(2,'0')} / 09`;
   stageVideo.setAttribute('aria-label',`当前动作预览：${choice.dataset.name}`);
   stageVideo.poster=`assets/${key}.jpg`;
-  stageVideo.src=`assets/${key}.mp4`;
+  stageVideo.src=`assets/${key}.mp4?v=20261014`;
   stageVideo.load();
   if(matchMedia('(max-width:800px)').matches){
     document.querySelector('.gesture-stage').scrollIntoView({behavior:'instant',block:'start'});

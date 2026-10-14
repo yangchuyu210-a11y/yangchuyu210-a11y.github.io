@@ -221,7 +221,7 @@ function Header({ page }) {
   ];
   return <header className={`site-header frame${page.pathname === "/" ? " site-header-home" : ""}${scrolled ? " is-scrolled" : ""}`}>
     <div className="header-identity">
-      <Link className="brand link-line name-eyes-trigger" to="/yangchuyu" aria-label="YANGCHUYU · 查看简历"><BlurText>YANGCHUYU</BlurText><span className="name-eyes" aria-hidden="true"><img src="/brand/curious-eyes.webp" alt="" width="44" height="32" decoding="async" /></span></Link>
+      <Link className="brand link-line name-eyes-trigger" to="/yangchuyu" aria-label="YANGCHUYU · 查看简历" title="点击查看个人简历"><BlurText>YANGCHUYU</BlurText><span className="resume-hint">简历 <span aria-hidden="true">↗</span></span><span className="name-eyes" aria-hidden="true"><img src="/brand/curious-eyes.webp" alt="" width="44" height="32" decoding="async" /></span></Link>
       {page.pathname === "/" && !scrolled && <p className="hero-identity">AI视觉设计</p>}
     </div>
     <nav aria-label="Primary navigation">
